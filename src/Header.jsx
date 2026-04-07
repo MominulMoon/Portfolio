@@ -3,7 +3,7 @@ function Header() {
     <header>
       <nav className="navbar">
         <div className="nav-brand">
-          Amine_codes<span className="brand-dot">.</span>
+          Portfolio<span className="brand-dot">.</span>
         </div>
         <ul className="nav-menu">
           <li>
