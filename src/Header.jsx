@@ -42,7 +42,7 @@ function Header() {
             Let's Talk
           </a>
         </div>
-        <div classNameName="hamburger">
+        <div className="hamburger">
           <span></span>
           <span></span>
           <span></span>

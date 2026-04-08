@@ -1,13 +1,52 @@
 import MoonBabu from "./assets/Moon.jpeg";
+
+const socialLinks = [
+  {
+    label: "WhatsApp",
+    className: "whatsapp",
+    icon: "fab fa-whatsapp",
+    href: "https://wa.me/+8801842741365",
+  },
+  {
+    label: "LinkedIn",
+    className: "linkedin",
+    icon: "fab fa-linkedin-in",
+    href: "https://www.linkedin.com/in/md-moon-babu-75b335322/",
+  },
+  {
+    label: "GitHub",
+    className: "github",
+    icon: "fab fa-github",
+    href: "https://github.com/MominulMoon",
+  },
+  {
+    label: "Instagram",
+    className: "instagram",
+    icon: "fab fa-instagram",
+    href: "https://www.instagram.com/mdmominulislammoon/",
+  },
+];
+
+const stats = [
+  { number: "15+", label: "Projects Completed" },
+  { number: "1+", label: "Years Experience" },
+  { number: "CSE", label: "RUET" },
+];
+
+const floatingCards = [
+  { icon: "fas fa-code", label: "Clean Code", cardClass: "card-1" },
+  { icon: "fas fa-mobile-alt", label: "Learner", cardClass: "card-2" },
+  { icon: "fas fa-rocket", label: "Problem Solver", cardClass: "card-3" },
+];
+
 function ProfileCard() {
   return (
     <div>
-      {" "}
       <section id="home" className="section home">
         <div className="container">
           <div className="home-content">
             <div className="home-text">
-              <div className="greeting">👋 Assalamulaikum </div>
+              <div className="greeting">👋 Assalamulaikum</div>
               <h1 className="hero-title">
                 I'm <span className="accent">MD Moon Babu</span>
               </h1>
@@ -25,18 +64,12 @@ function ProfileCard() {
               </p>
 
               <div className="hero-stats">
-                <div className="stat">
-                  <span className="stat-number">15+</span>
-                  <span className="stat-label">Projects Completed</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-number">1+</span>
-                  <span className="stat-label">Years Experience</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-number">CSE</span>
-                  <span className="stat-label">RUET</span>
-                </div>
+                {stats.map(({ number, label }) => (
+                  <div key={label} className="stat">
+                    <span className="stat-number">{number}</span>
+                    <span className="stat-label">{label}</span>
+                  </div>
+                ))}
               </div>
 
               <div className="hero-actions">
@@ -51,30 +84,18 @@ function ProfileCard() {
               </div>
 
               <div className="social-links">
-                <a
-                  href="#"
-                  aria-label="WhatsApp"
-                  className="social-icon whatsapp"
-                >
-                  <i className="fab fa-whatsapp"></i>
-                </a>
-                <a
-                  href="#"
-                  aria-label="LinkedIn"
-                  className="social-icon linkedin"
-                >
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-                <a href="#" aria-label="GitHub" className="social-icon github">
-                  <i className="fab fa-github"></i>
-                </a>
-                <a
-                  href="#"
-                  aria-label="Instagram"
-                  className="social-icon instagram"
-                >
-                  <i className="fab fa-instagram"></i>
-                </a>
+                {socialLinks.map(({ label, className, icon, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    className={`social-icon ${className}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i className={icon}></i>
+                  </a>
+                ))}
               </div>
             </div>
 
@@ -82,21 +103,15 @@ function ProfileCard() {
               <div className="image-container">
                 <img
                   src={MoonBabu}
-                  alt="Profile photo of Asep"
+                  alt="Profile photo of Moon Babu"
                   className="profile-image"
                 />
-                <div className="floating-card card-1">
-                  <i className="fas fa-code"></i>
-                  <span>Clean Code</span>
-                </div>
-                <div className="floating-card card-2">
-                  <i className="fas fa-mobile-alt"></i>
-                  <span>Learner</span>
-                </div>
-                <div className="floating-card card-3">
-                  <i className="fas fa-rocket"></i>
-                  <span>Problem Solver</span>
-                </div>
+                {floatingCards.map(({ icon, label, cardClass }) => (
+                  <div key={label} className={`floating-card ${cardClass}`}>
+                    <i className={icon}></i>
+                    <span>{label}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import Moon from "./assets/Moon2.jpeg";
+
 function About() {
   return (
     <div>
@@ -27,7 +28,7 @@ function About() {
               <h2 className="section-title">About Me</h2>
               <div className="about-description">
                 <p>
-                  I'm Moon, a CSE undergraduate at RUET and a passionate
+                  I'm MD. Moon , a CSE undergraduate at RUET and a passionate
                   developer with a strong interest in both web development and
                   data-driven technologies. My programming journey began with
                   core languages like C++ and Java, and since then I've been
