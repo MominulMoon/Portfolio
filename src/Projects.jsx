@@ -1,5 +1,10 @@
-import { useRef, useEffect, useCallback } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
+import { useRef, useEffect, useCallback, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  animate,
+  AnimatePresence,
+} from "framer-motion";
 
 const projectsData = [
   {
@@ -8,8 +13,8 @@ const projectsData = [
     alt: "My Movie List",
     title: "My Movie List",
     description:
-      "A simple personal movie list project where I keep track of movies I’ve watched and rate them for my own reference.",
-    liveLink: "#",
+      "A simple personal movie list project where I keep track of movies I've watched and rate them for my own reference.",
+    liveLink: null,
     githubLink: "https://github.com/MominulMoon/My-Movie-List",
     tech: ["React", "Node.js", "Express.js", "CSS3"],
   },
@@ -20,7 +25,7 @@ const projectsData = [
     title: "QR Code Generator",
     description:
       "A simple and beginner-friendly QR Code Generator built using Node.js. This project allows users to generate QR codes instantly from any text or URL.",
-    liveLink: "#",
+    liveLink: null,
     githubLink: "https://github.com/MominulMoon/QR-Code-Generator",
     tech: ["Node.js", "JavaScript", "npm QRcode package"],
   },
@@ -30,8 +35,8 @@ const projectsData = [
     alt: "Hand Pose Detector",
     title: "Hand Pose Detector",
     description:
-      "Video-Handpose-Detector is a JavaScript-based web application that detects and tracks hand poses in video streams. Built with modern web technologies, this project enables real-time hand pose detection and analysis through a browser-based interface.",
-    liveLink: "#",
+      "Video-Handpose-Detector is a JavaScript-based web application that detects and tracks hand poses in video streams.",
+    liveLink: null,
     githubLink: "https://github.com/MominulMoon/Video-Handpose-Detector",
     tech: ["React", "TensorFlow.js", "React Webcam"],
   },
@@ -41,19 +46,18 @@ const projectsData = [
     alt: "Space Shooter Game",
     title: "Space Shooter Game",
     description: "Space shooter game made in godot",
-    liveLink: "#",
+    liveLink: null,
     githubLink: "https://github.com/MominulMoon/Space-Shooter-Game",
     tech: ["Godot Engine", "GDScript"],
   },
-
   {
     id: 5,
-    image: "https://placehold.co/400x220?text=Portfolio ",
+    image: "https://placehold.co/400x220?text=Portfolio",
     alt: "Portfolio Website",
     title: "Portfolio Website",
     description:
-      "A personal portfolio website built with React, showcasing my projects, skills, and experience in a clean and responsive design.",
-    liveLink: "#",
+      "A personal portfolio website built with React, showcasing my projects, skills, and experience.",
+    liveLink: null,
     githubLink: "https://github.com/MominulMoon/Portfolio",
     tech: ["React", "CSS3", "HTML5", "Motion-Animations"],
   },
@@ -63,8 +67,8 @@ const projectsData = [
     alt: "Simon Says Game",
     title: "Simon Says Game",
     description:
-      "A classic Simon Says memory game built using HTML, CSS, JavaScript, and jQuery. Test your memory by repeating the color pattern shown by the game. Each level increases the difficulty by adding a new color to the sequence.",
-    liveLink: "#",
+      "A classic Simon Says memory game. Test your memory by repeating the color pattern shown by the game.",
+    liveLink: null,
     githubLink: "https://github.com/MominulMoon/Simon-Says-Game",
     tech: ["HTML5", "CSS3", "JavaScript", "jQuery"],
   },
@@ -74,15 +78,36 @@ const projectsData = [
     alt: "Codeforce Problem Solutions",
     title: "Codeforce Problem Solutions",
     description:
-      "This repository contains solutions to various Codeforces competitive programming problems implemented in C++ and Java.",
-    liveLink: "#",
+      "Solutions to various Codeforces competitive programming problems implemented in C++ and Java.",
+    liveLink: null,
     githubLink: "https://github.com/MominulMoon/Codeforce-Problems-Solutions",
     tech: ["C++", "Java"],
   },
 ];
 
-const CARD_WIDTH = 364; // 340px card + 24px gap
-const SPEED = 0.6; // px per animation frame
+const CARD_WIDTH = 364;
+const SPEED = 0.6;
+
+function Toast({ message, onDone }) {
+  return (
+    <AnimatePresence>
+      {message && (
+        <motion.div
+          key="toast"
+          className="toast"
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          transition={{ duration: 0.25 }}
+          onAnimationComplete={() => setTimeout(onDone, 2800)}
+        >
+          <span className="toast-icon">i</span>
+          {message}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 function Projects() {
   const containerRef = useRef(null);
@@ -90,8 +115,8 @@ function Projects() {
   const rafRef = useRef(null);
   const isPaused = useRef(false);
   const x = useMotionValue(0);
+  const [toast, setToast] = useState(null);
 
-  // Calculates how far left the track can travel
   const getMaxDrag = () => {
     if (!carouselRef.current || !containerRef.current) return 0;
     return -(
@@ -99,7 +124,6 @@ function Projects() {
     );
   };
 
-  // rAF loop: nudges x left every frame, loops back to 0 at the end
   const startScroll = useCallback(() => {
     const tick = () => {
       if (!isPaused.current) {
@@ -124,7 +148,6 @@ function Projects() {
     isPaused.current = false;
   };
 
-  // Pause auto-scroll, spring-animate to the new position, then resume
   const moveTo = (delta) => {
     pause();
     const next = Math.min(0, Math.max(x.get() + delta, getMaxDrag()));
@@ -136,25 +159,16 @@ function Projects() {
     });
   };
 
-  const arrowBase = {
-    position: "absolute",
-    top: "50%",
-    transform: "translateY(-50%)",
-    zIndex: 10,
-    width: "42px",
-    height: "42px",
-    borderRadius: "50%",
-    border: "1px solid rgba(255,255,255,0.2)",
-    background: "rgba(0,0,0,0.55)",
-    color: "#fff",
-    fontSize: "22px",
-    lineHeight: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    backdropFilter: "blur(6px)",
-    transition: "background 0.2s",
+  const handleLiveClick = (e, liveLink, title) => {
+    e.stopPropagation();
+    if (liveLink) {
+      window.open(liveLink, "_blank", "noreferrer");
+    } else {
+      e.preventDefault();
+      setToast(
+        `"${title}" doesn't have a live demo yet.Pleae use the GitHub link to view the code.`,
+      );
+    }
   };
 
   return (
@@ -162,11 +176,10 @@ function Projects() {
       <div className="container">
         <h2 className="section-title">Featured Projects</h2>
 
-        {/* Wrapper is relative so arrows can be positioned over the edges */}
-        <div style={{ position: "relative" }}>
+        <div className="carousel-wrapper">
           <button
             aria-label="Scroll left"
-            style={{ ...arrowBase, left: "-20px" }}
+            className="carousel-arrow carousel-arrow--left"
             onClick={() => moveTo(+CARD_WIDTH)}
             onMouseEnter={pause}
             onMouseLeave={resume}
@@ -176,7 +189,7 @@ function Projects() {
 
           <button
             aria-label="Scroll right"
-            style={{ ...arrowBase, right: "-20px" }}
+            className="carousel-arrow carousel-arrow--right"
             onClick={() => moveTo(-CARD_WIDTH)}
             onMouseEnter={pause}
             onMouseLeave={resume}
@@ -184,29 +197,22 @@ function Projects() {
             ›
           </button>
 
-          {/* Hover over the track pauses auto-scroll */}
           <div
             ref={containerRef}
-            style={{ overflow: "hidden", cursor: "grab" }}
+            className="carousel-container"
             onMouseEnter={pause}
             onMouseLeave={resume}
-            onMouseDown={(e) => (e.currentTarget.style.cursor = "grabbing")}
-            onMouseUp={(e) => (e.currentTarget.style.cursor = "grab")}
+            onMouseDown={(e) => e.currentTarget.classList.add("grabbing")}
+            onMouseUp={(e) => e.currentTarget.classList.remove("grabbing")}
           >
             <motion.div
               ref={carouselRef}
+              className="carousel-track"
               drag="x"
               dragConstraints={containerRef}
               dragElastic={0.08}
               dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
-              style={{
-                x,
-                display: "flex",
-                gap: "24px",
-                padding: "16px 4px",
-                width: "max-content",
-                userSelect: "none",
-              }}
+              style={{ x }}
               onDragStart={pause}
               onDragEnd={resume}
               whileTap={{ cursor: "grabbing" }}
@@ -215,7 +221,6 @@ function Projects() {
                 <motion.div
                   key={project.id}
                   className="project-card"
-                  style={{ width: "340px", flexShrink: 0 }}
                   whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
                 >
                   <div className="project-image">
@@ -227,14 +232,21 @@ function Projects() {
                     <div className="project-overlay">
                       <div className="project-links">
                         <a
-                          href={project.liveLink}
-                          className="project-link"
-                          target="_blank"
+                          href={project.liveLink || "#"}
+                          className={`project-link ${!project.liveLink ? "project-link--disabled" : ""}`}
                           rel="noreferrer"
-                          onClick={(e) => e.stopPropagation()}
+                          title={
+                            project.liveLink
+                              ? "Live demo"
+                              : "No live demo available"
+                          }
+                          onClick={(e) =>
+                            handleLiveClick(e, project.liveLink, project.title)
+                          }
                         >
                           <i className="fas fa-external-link-alt"></i>
                         </a>
+
                         <a
                           href={project.githubLink}
                           className="project-link"
@@ -263,6 +275,8 @@ function Projects() {
           </div>
         </div>
       </div>
+
+      <Toast message={toast} onDone={() => setToast(null)} />
     </section>
   );
 }

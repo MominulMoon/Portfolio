@@ -506,8 +506,8 @@ header.scrolled {
 }
 
 .profile-image {
-  width: 400px;
-  height: 500px;
+  width: 600px;
+  height: 750px;
   object-fit: cover;
   border-radius: 20px;
   box-shadow: var(--shadow-card);
@@ -1562,4 +1562,193 @@ header.scrolled {
     height: 50px;
     font-size: 1.2rem;
   }
+}
+
+/* ─── Ripple Effect ──────────────────────────────────────────────────────────── */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: ripple-expand 0.6s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes ripple-expand {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ─── Toast Notifications ────────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+  transform: translateX(120%);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.toast-visible {
+  transform: translateX(0);
+}
+
+.toast-info {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+.toast-success {
+  background: #10b981;
+}
+.toast-error {
+  background: #ef4444;
+}
+
+/* ─── Page Load Fade-in ──────────────────────────────────────────────────────── */
+body.loaded {
+  animation: page-fade-in 0.4s ease both;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ─── Focus-visible Accessibility ───────────────────────────────────────────── */
+.nav-link:focus-visible,
+.social-icon:focus-visible,
+.hire-btn:focus-visible,
+.cta-btn:focus-visible,
+.about-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* ─── App Root Wrapper ───────────────────────────────────────────────────────── */
+.app-wrapper {
+  position: relative;
+}
+
+/* ─── Mouse Glow Overlay ─────────────────────────────────────────────────────── */
+.glow-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+/* ── Carousel wrapper ───────────────────────────────────────── */
+.carousel-wrapper {
+  position: relative;
+}
+
+/* ── Arrow buttons ──────────────────────────────────────────── */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s;
+}
+
+.carousel-arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-arrow--left {
+  left: -20px;
+}
+.carousel-arrow--right {
+  right: -20px;
+}
+
+/* ── Scrollable container ───────────────────────────────────── */
+.carousel-container {
+  overflow: hidden;
+  cursor: grab;
+}
+
+.carousel-container.grabbing {
+  cursor: grabbing;
+}
+
+/* ── Draggable track ────────────────────────────────────────── */
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  padding: 16px 4px;
+  width: max-content;
+  user-select: none;
+}
+
+/* ── Individual project card ────────────────────────────────── */
+.project-card {
+  width: 340px;
+  flex-shrink: 0;
+}
+
+/* ── Disabled live-link state ───────────────────────────────── */
+.project-link--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Toast notification ─────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: rgba(20, 20, 20, 0.92);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  max-width: 280px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.toast-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
 }
