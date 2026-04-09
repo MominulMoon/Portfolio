@@ -3,10 +3,10 @@ import About from "./About";
 import Skill from "./Skill";
 import Services from "./Services";
 import Projects from "./Projects";
-function Body() {
+function Body({ typedText }) {
   return (
     <div>
-      <ProfileCard />
+      <ProfileCard typedText={typedText} />
       <About />
       <Skill />
       <Services />

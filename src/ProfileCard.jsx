@@ -39,7 +39,7 @@ const floatingCards = [
   { icon: "fas fa-rocket", label: "Problem Solver", cardClass: "card-3" },
 ];
 
-function ProfileCard() {
+function ProfileCard({ typedText }) {
   return (
     <div>
       <section id="home" className="section home">
@@ -51,7 +51,8 @@ function ProfileCard() {
                 I'm <span className="accent">MD Moon Babu</span>
               </h1>
               <h2 className="hero-subtitle" id="rotating-profession">
-                Web Developer
+                {typedText}
+                <span className="cursor">|</span>
               </h2>
               <p className="hero-desc">
                 I'm Moon, a CSE undergraduate at RUET with a strong passion for

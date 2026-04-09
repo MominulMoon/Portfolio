@@ -6,9 +6,60 @@ import {
   animate,
 } from "framer-motion";
 
+import { useState, useEffect } from "react";
+
 import Header from "./Header";
 import Body from "./Body";
 import Contact from "./Contact";
+
+function useTypewriter() {
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    const words = [
+      "Full-Stack Developer",
+      "Frontend Engineer",
+      "Backend Developer",
+      "Problem Solver",
+      "Data Scientist",
+    ];
+
+    let wordIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    let timer;
+
+    function tick() {
+      const word = words[wordIndex];
+      const displayed = deleting
+        ? word.slice(0, charIndex - 1)
+        : word.slice(0, charIndex + 1);
+
+      setDisplayedText(`I'm a ${displayed}`);
+
+      if (deleting) charIndex--;
+      else charIndex++;
+
+      let delay = deleting ? 75 : 150;
+
+      if (!deleting && charIndex === word.length) {
+        delay = 2000; // pause at end of word
+        deleting = true;
+      } else if (deleting && charIndex === 0) {
+        deleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        delay = 500; // pause before next word
+      }
+
+      timer = setTimeout(tick, delay);
+    }
+
+    tick();
+    return () => clearTimeout(timer);
+  }, []);
+
+  return displayedText;
+}
 
 // Reusable fade-up animation variant for each section
 const sectionVariants = {
@@ -31,6 +82,8 @@ const headerVariants = {
 };
 
 function App() {
+  const typedText = useTypewriter();
+
   const mouseX = useMotionValue(-500);
   const mouseY = useMotionValue(-500);
   const glowOpacity = useMotionValue(0);
@@ -95,7 +148,7 @@ function App() {
           animate="visible"
           transition={{ delay: 0.2 }}
         >
-          <Body />
+          <Body typedText={typedText} />
         </motion.div>
 
         {/* Contact section fades up last */}
