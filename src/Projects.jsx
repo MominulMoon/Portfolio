@@ -1,4 +1,12 @@
 import { useRef, useEffect, useCallback, useState } from "react";
+
+import MyMovieList from "./assets/MyMovieList.png";
+import QRCode from "./assets/QRCode.png";
+import TravelList from "./assets/TravelList.png";
+import Profile from "./assets/Portfolio0.png";
+import CF from "./assets/CF.png";
+import SpaceShooter from "./assets/SpaceShooter.png";
+
 import {
   motion,
   useMotionValue,
@@ -9,7 +17,7 @@ import {
 const projectsData = [
   {
     id: 1,
-    image: "https://placehold.co/400x220?text=My-Movie-lsit",
+    image: MyMovieList,
     alt: "My Movie List",
     title: "My Movie List",
     description:
@@ -20,7 +28,7 @@ const projectsData = [
   },
   {
     id: 2,
-    image: "https://placehold.co/400x220?text=QR Code Generator",
+    image: QRCode,
     alt: "QR Code Generator",
     title: "QR Code Generator",
     description:
@@ -31,6 +39,38 @@ const projectsData = [
   },
   {
     id: 3,
+    image: TravelList,
+    alt: "Travel List",
+    title: "Travel List",
+    description:
+      "A simple personal travel list project where I keep track of things I need to pack for my trips, ensuring I never forget essential items when traveling.",
+    liveLink: null,
+    githubLink: "https://github.com/MominulMoon/Travel-List",
+    tech: ["React"],
+  },
+  {
+    id: 4,
+    image: Profile,
+    alt: "Portfolio Website",
+    title: "Portfolio Website",
+    description:
+      "A personal portfolio website built with React, showcasing my projects, skills, and experience.",
+    liveLink: null,
+    githubLink: "https://github.com/MominulMoon/Portfolio",
+    tech: ["React", "CSS3", "HTML5", "Framer Motion"],
+  },
+  {
+    id: 5,
+    image: SpaceShooter,
+    alt: "Space Shooter Game",
+    title: "Space Shooter Game",
+    description: "Space shooter game made in godot",
+    liveLink: null,
+    githubLink: "https://github.com/MominulMoon/Space-Shooter-Game",
+    tech: ["Godot Engine", "GDScript"],
+  },
+  {
+    id: 6,
     image: "https://placehold.co/400x220?text=Hand Pose Detector",
     alt: "Hand Pose Detector",
     title: "Hand Pose Detector",
@@ -41,40 +81,8 @@ const projectsData = [
     tech: ["React", "TensorFlow.js", "React Webcam"],
   },
   {
-    id: 4,
-    image: "https://placehold.co/400x220?text=Space Shooter Game",
-    alt: "Space Shooter Game",
-    title: "Space Shooter Game",
-    description: "Space shooter game made in godot",
-    liveLink: null,
-    githubLink: "https://github.com/MominulMoon/Space-Shooter-Game",
-    tech: ["Godot Engine", "GDScript"],
-  },
-  {
-    id: 5,
-    image: "https://placehold.co/400x220?text=Portfolio",
-    alt: "Portfolio Website",
-    title: "Portfolio Website",
-    description:
-      "A personal portfolio website built with React, showcasing my projects, skills, and experience.",
-    liveLink: null,
-    githubLink: "https://github.com/MominulMoon/Portfolio",
-    tech: ["React", "CSS3", "HTML5", "Motion-Animations"],
-  },
-  {
-    id: 6,
-    image: "https://placehold.co/400x220?text=Simon Says Game",
-    alt: "Simon Says Game",
-    title: "Simon Says Game",
-    description:
-      "A classic Simon Says memory game. Test your memory by repeating the color pattern shown by the game.",
-    liveLink: null,
-    githubLink: "https://github.com/MominulMoon/Simon-Says-Game",
-    tech: ["HTML5", "CSS3", "JavaScript", "jQuery"],
-  },
-  {
     id: 7,
-    image: "https://placehold.co/400x220?text=Codeforce Problem Solutions",
+    image: CF,
     alt: "Codeforce Problem Solutions",
     title: "Codeforce Problem Solutions",
     description:
