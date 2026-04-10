@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import Moon from "./assets/Moon2.jpeg";
 
+/**
+ * About
+ * Displays the author's biography block. Registers its own `.stat-item` elements 
+ * with the `scrollReveal` prop to ensure they animate into view smoothly 
+ * when the user scrolls to the `#about` module.
+ */
 function About({ scrollReveal, buttonAction }) {
   useEffect(() => {
     if (scrollReveal) {

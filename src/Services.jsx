@@ -1,5 +1,12 @@
 import { useEffect } from "react";
 
+/**
+ * Services
+ * Defines and renders the various professional services offered using a 
+ * declarative data array (`services`). Binds grid items to `scrollReveal` 
+ * for a staggered entrance effect upon scroll visibility.
+ */
+
 const servicesData = [
   {
     id: 1,

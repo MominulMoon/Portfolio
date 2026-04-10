@@ -1,5 +1,12 @@
 import { useEffect } from "react";
 
+/**
+ * Skill
+ * Renders a grid of technical skills split by category.
+ * Hooks into `scrollReveal` to sequentially animate skill bars and category 
+ * cards as the user begins scrolling down the page.
+ */
+
 const skillsData = [
   {
     category: "Frontend Development",

@@ -117,6 +117,12 @@ function Toast({ message, onDone }) {
   );
 }
 
+/**
+ * Projects
+ * An interactive portfolio gallery that fetches a declarative list of projects
+ * and allows the user to filter dynamically by clicking category pills (e.g. 'React').
+ * Triggers Framer layout animations when filtering and scrollReveal when entering the viewport.
+ */
 function Projects({ scrollReveal }) {
   const containerRef = useRef(null);
   const carouselRef = useRef(null);
@@ -125,6 +131,7 @@ function Projects({ scrollReveal }) {
   const x = useMotionValue(0);
   const [toast, setToast] = useState(null);
 
+  // Calculates the physical maximum scroll offset allowed so we don't drag past the last item
   const getMaxDrag = () => {
     if (!carouselRef.current || !containerRef.current) return 0;
     return -(
@@ -165,7 +172,10 @@ function Projects({ scrollReveal }) {
 
   const moveTo = (delta) => {
     pause();
+    // Clamp the next calculated offset between 0 and getMaxDrag()
     const next = Math.min(0, Math.max(x.get() + delta, getMaxDrag()));
+    
+    // Animate the Framer motion value 'x' to the new offset, pausing auto-scroll during transition
     animate(x, next, {
       type: "spring",
       stiffness: 250,

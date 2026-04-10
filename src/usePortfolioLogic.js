@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import { animate, inView, useScroll, useMotionValueEvent } from "framer-motion";
 
-// ─── Sticky Header — Framer Motion useScroll ─────────────────────────────────
-// useScroll gives a live scrollY motion value; no manual event listener needed.
+/**
+ * useStickyHeader
+ * Uses Framer Motion's `useScroll` to attach a scroll listener without needing
+ * a manual `window.addEventListener`. It toggles a 'scrolled' class on the header
+ * when the user scrolls down more than 50px, which applying styling for a shrunken/opaque header.
+ */
 function useStickyHeader() {
   const { scrollY } = useScroll();
 
@@ -11,7 +15,12 @@ function useStickyHeader() {
   });
 }
 
-// ─── Smooth Scroll for Nav Links ─────────────────────────────────────────────
+/**
+ * useSmoothScroll
+ * Intercepts clicks on all elements with the `.nav-link` class.
+ * If the link targets an anchor (e.g., '#about'), it prevents the default jump and
+ * calculates the exact scroll position, accounting for the header's fixed height.
+ */
 function useSmoothScroll() {
   useEffect(() => {
     function handleClick(e) {
@@ -33,9 +42,12 @@ function useSmoothScroll() {
   }, []);
 }
 
-
-// ─── Toast Notifications — Framer Motion animate slide ───────────────────────
-// Replaces CSS transform transitions with Framer Motion's animate().
+/**
+ * useNotifications
+ * Exposes a global window function `showPortfolioToast` to create temporary
+ * notification toasts. It leverages Framer Motion's `animate` function to control
+ * entering and exiting slide animations before removing the DOM node cleanly.
+ */
 function useNotifications() {
   useEffect(() => {
     function showToast(message, type = "info") {
@@ -64,7 +76,11 @@ function useNotifications() {
   }, []);
 }
 
-// ─── Page Load Fade-in ────────────────────────────────────────────────────────
+/**
+ * usePageLoad
+ * Adds a 'loaded' class to the body object shortly after the app mounts.
+ * Useful for transitioning in the initial layout without abrupt flashes.
+ */
 function usePageLoad() {
   useEffect(() => {
     const timer = setTimeout(() => document.body.classList.add("loaded"), 100);
@@ -75,7 +91,11 @@ function usePageLoad() {
   }, []);
 }
 
-// ─── Master hook — compose all features ───────────────────────────────────────
+/**
+ * usePortfolioLogic
+ * Acts as a centralized controller to mount our global vanilla-DOM hybrid functionality.
+ * We run this once in the root App.jsx component.
+ */
 export function usePortfolioLogic() {
   useStickyHeader(); // Shrink header on scroll      ← Framer Motion useScroll
   useSmoothScroll(); // Smooth anchor scrolling

@@ -5,6 +5,11 @@ const SERVICE_ID = "service_mct6aw4";
 const TEMPLATE_ID = "template_046mmig";
 const PUBLIC_KEY = "bKL4kJw7SbywtDtGt";
 
+/**
+ * Contact
+ * Represents the final section of the page, acting as an interactive form and list of contact methods.
+ * Registers form groups and contact items to animate dynamically via `scrollReveal`.
+ */
 function Contact({ scrollReveal }) {
   const formRef = useRef(null);
   const [status, setStatus] = useState("idle"); // "idle" | "sending" | "success" | "error"

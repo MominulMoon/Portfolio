@@ -40,14 +40,22 @@ const floatingCards = [
   { icon: "fas fa-rocket", label: "Problem Solver", cardClass: "card-3" },
 ];
 
+/**
+ * ProfileCard
+ * Renders the primary hero section elements (greeting, name, typed profession, statistics).
+ * Leverages the passed `scrollReveal` prop to bind fade-up animations to specific 
+ * sub-element class names on mount. 
+ */
 function ProfileCard({ typedText, scrollReveal, buttonAction }) {
   useEffect(() => {
     if (scrollReveal) {
+      // Register individual element groups for intersection observer animations
       const cleanups = [
         scrollReveal(".hero-stats .stat"),
         scrollReveal(".floating-card"),
         scrollReveal(".social-icon"),
       ];
+      // Ensure observers are disconnected when component unmounts
       return () => cleanups.forEach((c) => c && c());
     }
   }, [scrollReveal]);

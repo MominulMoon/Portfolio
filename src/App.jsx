@@ -15,6 +15,12 @@ import Contact from "./Contact";
 
 import { usePortfolioLogic } from "./usePortfolioLogic";
 
+/**
+ * useTypewriter
+ * Creates a typing effect that continually loops through an array of phrases.
+ * It calculates text slicing based on a 'deleting' flag and variable timing delays.
+ * Returns the computed sliced string on every frame.
+ */
 function useTypewriter() {
   const [displayedText, setDisplayedText] = useState("");
 
@@ -40,11 +46,14 @@ function useTypewriter() {
 
       setDisplayedText(`I'm a ${displayed}`);
 
+      // Advance or retreat the character pointer
       if (deleting) charIndex--;
       else charIndex++;
 
+      // Dynamic typing speed: deleting is faster than typing
       let delay = deleting ? 75 : 150;
 
+      // Check boundaries to switch states
       if (!deleting && charIndex === word.length) {
         delay = 2000; // pause at end of word
         deleting = true;
@@ -64,6 +73,12 @@ function useTypewriter() {
   return displayedText;
 }
 
+/**
+ * useMobileMenu
+ * Manages the state of the mobile side-menu.
+ * It binds escape key, resize, and outside-click listeners to automatically close the menu,
+ * and locks body scrolling when the menu is active to prevent under-scrolling.
+ */
 function useMobileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -105,6 +120,12 @@ function useMobileMenu() {
   return { isMenuOpen, toggleMenu, closeMenu };
 }
 
+/**
+ * useScrollReveal
+ * Returns a memoized factory function. When a component calls it with a CSS selector,
+ * it registers Framer Motion's `inView` listeners on the matching DOM elements to trigger
+ * a sequential slide-up fade-in animation as elements enter the viewport.
+ */
 function useScrollReveal() {
   return useCallback((selector) => {
     const targets = document.querySelectorAll(selector);
@@ -114,16 +135,19 @@ function useScrollReveal() {
       el.style.transform = "translateY(30px)";
     });
 
+    // Attach an IntersectionObserver to each element via Framer Motion's `inView`
     const cleanups = Array.from(targets).map((el, i) =>
       inView(
         el,
         () => {
+          // Animates element up into its final place staggered by index (i * 0.08s)
           animate(
             el,
             { opacity: 1, y: [30, 0] },
             { duration: 0.6, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] },
           );
         },
+        // Trigger when 15% of element is visible
         { amount: 0.15, margin: "0px 0px -50px 0px" },
       ),
     );
@@ -132,6 +156,12 @@ function useScrollReveal() {
   }, []);
 }
 
+/**
+ * useButtonActions
+ * Returns an `onClick` callback that extracts the click coordinates relative to the button boundaries,
+ * calculates geometric proportions, and dynamically creates a Framer animation node using imperative code
+ * to produce a material-design ripple effect inside the clicked button.
+ */
 function useButtonActions() {
   return useCallback((e) => {
     const btn = e.currentTarget;
@@ -165,6 +195,12 @@ function useButtonActions() {
   }, []);
 }
 
+/**
+ * useActiveNav
+ * Continuously tracks window scroll offset against all `<section id="...">` components' offsets.
+ * Determines which section is currently active and sets the state, so the navigation bar can
+ * highlight the currently-viewed section name.
+ */
 function useActiveNav() {
   const [activeSection, setActiveSection] = useState("#home");
 
@@ -183,6 +219,7 @@ function useActiveNav() {
         const scrollPos = window.scrollY + headerH + 50; // extra padding
 
         let current = "#home";
+        // Find the last section whose top offset has been crossed by the scroll position
         document.querySelectorAll("section[id]").forEach((sec) => {
           if (scrollPos >= sec.offsetTop) current = `#${sec.id}`;
         });
@@ -226,17 +263,23 @@ const headerVariants = {
 };
 
 function App() {
+  //Mount the Global Logic in this with vanilla JS making App.jsx few line shorter :)(e.g. notifications, sticky header, smooth scroll)
   usePortfolioLogic();
+  // Generate dynamic typing text for the hero section
   const typedText = useTypewriter();
+  // Track the currently viewed section for the navbar
   const activeSection = useActiveNav();
+  // Manage mobile hamburger menu state
   const { isMenuOpen, toggleMenu, closeMenu } = useMobileMenu();
   const scrollReveal = useScrollReveal();
   const buttonAction = useButtonActions();
 
+  // Track mouse X/Y coordinates for the background glow effect (starts off-screen)
   const mouseX = useMotionValue(-500);
   const mouseY = useMotionValue(-500);
+  // Track the fade-in opacity of the mouse glow
   const glowOpacity = useMotionValue(0);
-
+  // Dynamically map X/Y coordinates into a CSS radial gradient string
   const glowBackground = useTransform(
     [mouseX, mouseY],
     ([x, y]) =>
