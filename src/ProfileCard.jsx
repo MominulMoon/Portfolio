@@ -46,7 +46,7 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
       const cleanups = [
         scrollReveal(".hero-stats .stat"),
         scrollReveal(".floating-card"),
-        scrollReveal(".social-icon")
+        scrollReveal(".social-icon"),
       ];
       return () => cleanups.forEach((c) => c && c());
     }
@@ -57,7 +57,10 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
         <div className="container">
           <div className="home-content">
             <div className="home-text">
-              <div className="greeting">👋 Assalamulaikum</div>
+              <div className="greeting">
+                👋 Assalamualaikum Wa rahmatullah wa barakatuh <br /> (
+                السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ )
+              </div>
               <h1 className="hero-title">
                 I'm <span className="accent">MD Moon Babu</span>
               </h1>

@@ -544,13 +544,13 @@ header.scrolled {
 
 .card-1 {
   top: 10%;
-  right: -20%;
+  right: -15%;
   animation-delay: 0s;
 }
 
 .card-2 {
   bottom: 30%;
-  left: -25%;
+  left: -10%;
   animation-delay: 1.5s;
 }
 
