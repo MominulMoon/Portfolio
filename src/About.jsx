@@ -104,10 +104,10 @@ function About({ scrollReveal, buttonAction }) {
               </div>
 
               <div className="about-actions">
-                <button className="about-btn" onClick={buttonAction}>
+                <a href="/CV.pdf" download="CV.pdf" className="about-btn" onClick={buttonAction} style={{ textDecoration: 'none', display: 'inline-flex' }}>
                   <span>Download CV</span>
                   <i className="fas fa-download"></i>
-                </button>
+                </a>
               </div>
             </div>
           </div>

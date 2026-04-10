@@ -43,8 +43,8 @@ const floatingCards = [
 /**
  * ProfileCard
  * Renders the primary hero section elements (greeting, name, typed profession, statistics).
- * Leverages the passed `scrollReveal` prop to bind fade-up animations to specific 
- * sub-element class names on mount. 
+ * Leverages the passed `scrollReveal` prop to bind fade-up animations to specific
+ * sub-element class names on mount.
  */
 function ProfileCard({ typedText, scrollReveal, buttonAction }) {
   useEffect(() => {
@@ -100,10 +100,16 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
                   <span>Hire Me</span>
                   <i className="fas fa-arrow-right"></i>
                 </button>
-                <button className="hire-btn secondary" onClick={buttonAction}>
+                <a
+                  href="/CV.pdf"
+                  download="CV.pdf"
+                  className="hire-btn secondary"
+                  onClick={buttonAction}
+                  style={{ textDecoration: "none" }}
+                >
                   <i className="fas fa-download"></i>
                   <span>Download CV</span>
-                </button>
+                </a>
               </div>
 
               <div className="social-links">
