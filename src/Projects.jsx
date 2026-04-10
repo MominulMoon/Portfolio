@@ -9,6 +9,7 @@ import SpaceShooter from "./assets/SpaceShooter.png";
 import CursedKnight from "./assets/CursedKnight.jpeg";
 
 import {
+  // eslint-disable-next-line no-unused-vars
   motion,
   useMotionValue,
   animate,
@@ -231,7 +232,7 @@ function Projects({ scrollReveal }) {
     }
   };
 
-  // Extracts individual project card JSX into a reusable function to prevent duplication 
+  // Extracts individual project card JSX into a reusable function to prevent duplication
   // between the desktop carousel and the mobile CSS grid components.
   const renderProjectCard = (project) => (
     <motion.div
