@@ -1,6 +1,6 @@
 # MD Moon - Personal Portfolio
 
-A sleek, interactive, and fully responsive personal developer portfolio designed to showcase projects, skills, and professional services. Built with modern web technologies, this portfolio delivers a premium user experience through smooth gesture-based carousels and fluid animations.
+A sleek, interactive, and fully responsive personal developer portfolio designed to showcase projects, skills, and professional services. Built with modern web technologies, this portfolio delivers a premium user experience through smooth gesture-based carousels, fluid animations, and a seamless direct messaging system powered by EmailJS.
 
 ## Live Demo
 
@@ -17,6 +17,7 @@ This repository contains the source code for my personal developer portfolio web
 - **Interactions & Animations:** Framer Motion (for drag carousels and hover effects)
 - **Styling:** Custom Vanilla CSS with robust responsive grid systems
 - **Typography & Icons:** FontAwesome & modern web fonts
+- **Messaging API:** EmailJS (for processing direct messages from the contact form)
 - **Hosting:** Netlify
 
 ## Project Structure
