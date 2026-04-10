@@ -6,6 +6,7 @@ import TravelList from "./assets/TravelList.png";
 import Profile from "./assets/Portfolio0.png";
 import CF from "./assets/CF.png";
 import SpaceShooter from "./assets/SpaceShooter.png";
+import CursedKnight from "./assets/CursedKnight.jpeg";
 
 import {
   motion,
@@ -61,6 +62,17 @@ const projectsData = [
   },
   {
     id: 5,
+    image: CursedKnight,
+    alt: "Cursed Knight",
+    title: "Cursed Knight",
+    description:
+      "A 2D action-adventure game made in Godot Engine during a game jam.",
+    liveLink: null,
+    githubLink: "https://github.com/MominulMoon/Gamejam-Project",
+    tech: ["Godot Engine", "GDScript"],
+  },
+  {
+    id: 6,
     image: SpaceShooter,
     alt: "Space Shooter Game",
     title: "Space Shooter Game",
@@ -70,7 +82,7 @@ const projectsData = [
     tech: ["Godot Engine", "GDScript"],
   },
   {
-    id: 6,
+    id: 7,
     image: "https://placehold.co/400x220?text=Hand Pose Detector",
     alt: "Hand Pose Detector",
     title: "Hand Pose Detector",
@@ -81,7 +93,7 @@ const projectsData = [
     tech: ["React", "TensorFlow.js", "React Webcam"],
   },
   {
-    id: 7,
+    id: 8,
     image: CF,
     alt: "Codeforce Problem Solutions",
     title: "Codeforce Problem Solutions",
