@@ -1753,3 +1753,21 @@ body.loaded {
   font-size: 12px;
   flex-shrink: 0;
 }
+
+/* ── Mobile Responsive Carousel Adjustments ───────────────────── */
+.mobile-projects-grid {
+  display: none !important;
+}
+.mobile-projects-grid .project-card {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .desktop-carousel {
+    display: none !important;
+  }
+  .mobile-projects-grid {
+    display: grid !important;
+  }
+}
+

@@ -231,12 +231,71 @@ function Projects({ scrollReveal }) {
     }
   };
 
+  // Extracts individual project card JSX into a reusable function to prevent duplication 
+  // between the desktop carousel and the mobile CSS grid components.
+  const renderProjectCard = (project) => (
+    <motion.div
+      key={project.id}
+      className="project-card"
+      // Triggers a slight magnification effect when moving the mouse over the card
+      whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+    >
+      <div className="project-image">
+        <img src={project.image} alt={project.alt} draggable="false" />
+        <div className="project-overlay">
+          <div className="project-links">
+            {/* Live Demo Link: dynamically disabled if the URL is missing. Intercepts clicks to show a Toast notification if empty. */}
+            <a
+              href={project.liveLink || "#"}
+              className={`project-link ${!project.liveLink ? "project-link--disabled" : ""}`}
+              rel="noreferrer"
+              title={project.liveLink ? "Live demo" : "No live demo available"}
+              onClick={(e) =>
+                handleLiveClick(e, project.liveLink, project.title)
+              }
+            >
+              <i className="fas fa-external-link-alt"></i>
+            </a>
+
+            {/* GitHub Repo Link: Stops click event propagation so that interacting with the link doesn't accidentally trigger parent framer-motion drag events. */}
+            <a
+              href={project.githubLink}
+              className="project-link"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="View GitHub Repository"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <i className="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div className="project-info">
+        <h3>{project.title}</h3>
+        <p>{project.description}</p>
+        <div className="project-tech">
+          {/* Automatically generate pills for each tech stack string */}
+          {project.tech.map((t, i) => (
+            <span key={i}>{t}</span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <section id="project" className="section projects">
       <div className="container">
         <h2 className="section-title">Featured Projects</h2>
 
-        <div className="carousel-wrapper">
+        {/* Mobile View: Vertical Grid */}
+        <div className="projects-grid mobile-projects-grid">
+          {projectsData.map((project) => renderProjectCard(project))}
+        </div>
+
+        {/* Desktop View: Framer Motion Carousel */}
+        <div className="carousel-wrapper desktop-carousel">
           <button
             aria-label="Scroll left"
             className="carousel-arrow carousel-arrow--left"
@@ -272,65 +331,12 @@ function Projects({ scrollReveal }) {
               dragConstraints={containerRef}
               dragElastic={0.08}
               dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
-              style={{ x }}
+              style={{ x, touchAction: "pan-y" }}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               whileTap={{ cursor: "grabbing" }}
             >
-              {projectsData.map((project) => (
-                <motion.div
-                  key={project.id}
-                  className="project-card"
-                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-                >
-                  <div className="project-image">
-                    <img
-                      src={project.image}
-                      alt={project.alt}
-                      draggable="false"
-                    />
-                    <div className="project-overlay">
-                      <div className="project-links">
-                        <a
-                          href={project.liveLink || "#"}
-                          className={`project-link ${!project.liveLink ? "project-link--disabled" : ""}`}
-                          rel="noreferrer"
-                          title={
-                            project.liveLink
-                              ? "Live demo"
-                              : "No live demo available"
-                          }
-                          onClick={(e) =>
-                            handleLiveClick(e, project.liveLink, project.title)
-                          }
-                        >
-                          <i className="fas fa-external-link-alt"></i>
-                        </a>
-
-                        <a
-                          href={project.githubLink}
-                          className="project-link"
-                          target="_blank"
-                          rel="noreferrer"
-                          aria-label="View GitHub Repository"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <i className="fab fa-github"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="project-info">
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    <div className="project-tech">
-                      {project.tech.map((t, i) => (
-                        <span key={i}>{t}</span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+              {projectsData.map((project) => renderProjectCard(project))}
             </motion.div>
           </div>
         </div>
