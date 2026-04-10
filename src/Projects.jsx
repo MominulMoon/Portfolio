@@ -117,7 +117,7 @@ function Toast({ message, onDone }) {
   );
 }
 
-function Projects() {
+function Projects({ scrollReveal }) {
   const containerRef = useRef(null);
   const carouselRef = useRef(null);
   const rafRef = useRef(null);
@@ -148,6 +148,13 @@ function Projects() {
     startScroll();
     return () => cancelAnimationFrame(rafRef.current);
   }, [startScroll]);
+
+  useEffect(() => {
+    if (scrollReveal) {
+      const cleanup = scrollReveal(".project-card");
+      return () => cleanup && cleanup();
+    }
+  }, [scrollReveal]);
 
   const pause = () => {
     isPaused.current = true;

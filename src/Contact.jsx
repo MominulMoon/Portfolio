@@ -1,13 +1,23 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 
 const SERVICE_ID = "service_mct6aw4";
 const TEMPLATE_ID = "template_046mmig";
 const PUBLIC_KEY = "bKL4kJw7SbywtDtGt";
 
-function Contact() {
+function Contact({ scrollReveal }) {
   const formRef = useRef(null);
   const [status, setStatus] = useState("idle"); // "idle" | "sending" | "success" | "error"
+
+  useEffect(() => {
+    if (scrollReveal) {
+      const cleanups = [
+        scrollReveal(".contact-item"),
+        scrollReveal(".form-group")
+      ];
+      return () => cleanups.forEach((c) => c && c());
+    }
+  }, [scrollReveal]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

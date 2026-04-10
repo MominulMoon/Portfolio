@@ -1,6 +1,16 @@
+import { useEffect } from "react";
 import Moon from "./assets/Moon2.jpeg";
 
-function About() {
+function About({ scrollReveal, buttonAction }) {
+  useEffect(() => {
+    if (scrollReveal) {
+      const cleanups = [
+        scrollReveal(".about-highlights .highlight"),
+        scrollReveal(".floating-card")
+      ];
+      return () => cleanups.forEach((c) => c && c());
+    }
+  }, [scrollReveal]);
   return (
     <div>
       <section id="about" className="section about">
@@ -88,7 +98,7 @@ function About() {
               </div>
 
               <div className="about-actions">
-                <button className="about-btn">
+                <button className="about-btn" onClick={buttonAction}>
                   <span>Download CV</span>
                   <i className="fas fa-download"></i>
                 </button>

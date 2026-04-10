@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const servicesData = [
   {
     id: 1,
@@ -37,7 +39,13 @@ const servicesData = [
   },
 ];
 
-function Services() {
+function Services({ scrollReveal }) {
+  useEffect(() => {
+    if (scrollReveal) {
+      const cleanup = scrollReveal(".service-card");
+      return () => cleanup && cleanup();
+    }
+  }, [scrollReveal]);
   return (
     <section id="service" className="section services">
       <div className="container">

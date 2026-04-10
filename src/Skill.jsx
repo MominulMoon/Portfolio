@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const skillsData = [
   {
     category: "Frontend Development",
@@ -65,7 +67,13 @@ const skillsData = [
   },
 ];
 
-function Skill() {
+function Skill({ scrollReveal }) {
+  useEffect(() => {
+    if (scrollReveal) {
+      const cleanup = scrollReveal(".skill-category");
+      return () => cleanup && cleanup();
+    }
+  }, [scrollReveal]);
   return (
     <section id="skills" className="section skills">
       <div className="container">

@@ -1,48 +1,38 @@
-function Header() {
+function Header({ activeSection, isMenuOpen, toggleMenu, closeMenu, buttonAction }) {
+  const navItems = [
+    { id: "#home", label: "Home" },
+    { id: "#about", label: "About" },
+    { id: "#skills", label: "Skills" },
+    { id: "#service", label: "Services" },
+    { id: "#project", label: "Projects" },
+    { id: "#contact", label: "Contact" },
+  ];
+
   return (
     <header>
       <nav className="navbar">
         <div className="nav-brand">
           Portfolio<span className="brand-dot">.</span>
         </div>
-        <ul className="nav-menu">
-          <li>
-            <a href="#home" className="nav-link active">
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="#about" className="nav-link">
-              About
-            </a>
-          </li>
-          <li>
-            <a href="#skills" className="nav-link">
-              Skills
-            </a>
-          </li>
-          <li>
-            <a href="#service" className="nav-link">
-              Services
-            </a>
-          </li>
-          <li>
-            <a href="#project" className="nav-link">
-              Projects
-            </a>
-          </li>
-          <li>
-            <a href="#contact" className="nav-link">
-              Contact
-            </a>
-          </li>
+        <ul className={`nav-menu ${isMenuOpen ? "active" : ""}`}>
+          {navItems.map((item) => (
+            <li key={item.id}>
+              <a
+                href={item.id}
+                className={`nav-link ${activeSection === item.id ? "active" : ""}`}
+                onClick={closeMenu}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
         </ul>
         <div className="nav-cta">
-          <a href="#contact" className="cta-btn">
+          <a href="#contact" className="cta-btn" onClick={(e) => { closeMenu(); buttonAction(e); }}>
             Let's Talk
           </a>
         </div>
-        <div className="hamburger">
+        <div className={`hamburger ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}>
           <span></span>
           <span></span>
           <span></span>

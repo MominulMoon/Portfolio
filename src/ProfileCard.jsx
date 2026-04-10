@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import MoonBabu from "./assets/Moon.jpeg";
 
 const socialLinks = [
@@ -39,7 +40,17 @@ const floatingCards = [
   { icon: "fas fa-rocket", label: "Problem Solver", cardClass: "card-3" },
 ];
 
-function ProfileCard({ typedText }) {
+function ProfileCard({ typedText, scrollReveal, buttonAction }) {
+  useEffect(() => {
+    if (scrollReveal) {
+      const cleanups = [
+        scrollReveal(".hero-stats .stat"),
+        scrollReveal(".floating-card"),
+        scrollReveal(".social-icon")
+      ];
+      return () => cleanups.forEach((c) => c && c());
+    }
+  }, [scrollReveal]);
   return (
     <div>
       <section id="home" className="section home">
@@ -74,11 +85,11 @@ function ProfileCard({ typedText }) {
               </div>
 
               <div className="hero-actions">
-                <button className="hire-btn primary">
+                <button className="hire-btn primary" onClick={buttonAction}>
                   <span>Hire Me</span>
                   <i className="fas fa-arrow-right"></i>
                 </button>
-                <button className="hire-btn secondary">
+                <button className="hire-btn secondary" onClick={buttonAction}>
                   <i className="fas fa-download"></i>
                   <span>Download CV</span>
                 </button>
