@@ -128,6 +128,8 @@ function Projects({ scrollReveal }) {
   const carouselRef = useRef(null);
   const rafRef = useRef(null);
   const isPaused = useRef(false);
+  // Track if mouse is hovering over carousel/buttons to prevent premature auto-scroll resume
+  const isHovered = useRef(false);
   const x = useMotionValue(0);
   const [toast, setToast] = useState(null);
 
@@ -163,24 +165,45 @@ function Projects({ scrollReveal }) {
     }
   }, [scrollReveal]);
 
-  const pause = () => {
+  // Pause auto-scroll when mouse enters container or arrows
+  const handleMouseEnter = () => {
+    isHovered.current = true;
     isPaused.current = true;
   };
-  const resume = () => {
+
+  // Resume auto-scroll when mouse leaves container or arrows
+  const handleMouseLeave = () => {
+    isHovered.current = false;
     isPaused.current = false;
   };
 
+  // Handle drag pausing specifically without altering hover state
+  const handleDragStart = () => {
+    isPaused.current = true;
+  };
+
+  const handleDragEnd = () => {
+    if (!isHovered.current) {
+      isPaused.current = false;
+    }
+  };
+
   const moveTo = (delta) => {
-    pause();
+    isPaused.current = true;
     // Clamp the next calculated offset between 0 and getMaxDrag()
     const next = Math.min(0, Math.max(x.get() + delta, getMaxDrag()));
-    
+
     // Animate the Framer motion value 'x' to the new offset, pausing auto-scroll during transition
     animate(x, next, {
       type: "spring",
       stiffness: 250,
       damping: 28,
-      onComplete: resume,
+      onComplete: () => {
+        // ONLY resume auto-scroll if the mouse hasn't returned/stayed inside the element
+        if (!isHovered.current) {
+          isPaused.current = false;
+        }
+      },
     });
   };
 
@@ -206,8 +229,8 @@ function Projects({ scrollReveal }) {
             aria-label="Scroll left"
             className="carousel-arrow carousel-arrow--left"
             onClick={() => moveTo(+CARD_WIDTH)}
-            onMouseEnter={pause}
-            onMouseLeave={resume}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             ‹
           </button>
@@ -216,8 +239,8 @@ function Projects({ scrollReveal }) {
             aria-label="Scroll right"
             className="carousel-arrow carousel-arrow--right"
             onClick={() => moveTo(-CARD_WIDTH)}
-            onMouseEnter={pause}
-            onMouseLeave={resume}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             ›
           </button>
@@ -225,8 +248,8 @@ function Projects({ scrollReveal }) {
           <div
             ref={containerRef}
             className="carousel-container"
-            onMouseEnter={pause}
-            onMouseLeave={resume}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             onMouseDown={(e) => e.currentTarget.classList.add("grabbing")}
             onMouseUp={(e) => e.currentTarget.classList.remove("grabbing")}
           >
@@ -238,8 +261,8 @@ function Projects({ scrollReveal }) {
               dragElastic={0.08}
               dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
               style={{ x }}
-              onDragStart={pause}
-              onDragEnd={resume}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
               whileTap={{ cursor: "grabbing" }}
             >
               {projectsData.map((project) => (

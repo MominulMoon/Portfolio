@@ -1684,10 +1684,10 @@ body.loaded {
 }
 
 .carousel-arrow--left {
-  left: -20px;
+  left: 10px;
 }
 .carousel-arrow--right {
-  right: -20px;
+  right: 10px;
 }
 
 /* ── Scrollable container ───────────────────────────────────── */
