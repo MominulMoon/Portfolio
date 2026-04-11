@@ -1039,6 +1039,304 @@ header.scrolled {
   );
   pointer-events: none;
 }
+/* ═══════════════════════════════════════════════════════════
+   stats.css  –  Stats section styles
+   Inherits CSS vars from the global stylesheet.
+═══════════════════════════════════════════════════════════ */
+
+/* ── Section wrapper ──────────────────────────────────────── */
+.stats-section {
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-section::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 212, 255, 0.05) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+/* ── Platform block (CF / GH) ─────────────────────────────── */
+.stats-platform-block {
+  margin-bottom: 4.5rem;
+}
+
+/* ── Platform title link ──────────────────────────────────── */
+.stats-platform-header {
+  margin-bottom: 1.8rem;
+}
+
+.platform-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s;
+}
+
+.platform-title:hover {
+  opacity: 0.8;
+}
+
+.platform-title.cf {
+  color: #1f8ac0;
+}
+.platform-title.gh {
+  color: var(--text-primary);
+}
+
+.platform-logo {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+}
+
+.platform-handle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 0.2rem;
+}
+
+/* ── Cards row ────────────────────────────────────────────── */
+.stats-cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+/* ── Card link wrapper ────────────────────────────────────── */
+.stats-card-link {
+  text-decoration: none;
+  display: block;
+}
+
+/* ── Individual card ──────────────────────────────────────── */
+.stats-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.6rem 1.4rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  cursor: default;
+  transition: border-color 0.25s;
+}
+
+.stats-card-link:hover .stats-card {
+  border-color: var(--card-accent, var(--accent-primary));
+}
+
+/* coloured left edge stripe */
+.stats-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--card-accent, var(--accent-primary));
+  border-radius: 3px 0 0 3px;
+}
+
+.stats-card__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top left,
+    var(--card-accent, var(--accent-primary)),
+    transparent 70%
+  );
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.stats-card__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.stats-card__label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.stats-card__value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--card-accent, var(--accent-primary));
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.stats-card__sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* ── Rank badge ───────────────────────────────────────────── */
+.rank-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.rank-badge {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--rank-color);
+  color: var(--rank-color);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: color-mix(in srgb, var(--rank-color) 10%, transparent);
+}
+
+/* ── Sparkline ────────────────────────────────────────────── */
+.sparkline-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.sparkline {
+  width: 140px;
+  height: 36px;
+  opacity: 0.85;
+}
+
+.sparkline-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ── GitHub contribution chart ────────────────────────────── */
+.gh-contribution-wrap {
+  padding: 1rem 1.4rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.gh-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  filter: saturate(1.2);
+}
+
+/* ── Skeleton loader ──────────────────────────────────────── */
+.stats-skeleton-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.stats-skeleton {
+  height: 130px;
+  border-radius: var(--border-radius);
+  background: linear-gradient(
+    90deg,
+    var(--glass-bg) 25%,
+    rgba(255, 255, 255, 0.06) 50%,
+    var(--glass-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Error message ────────────────────────────────────────── */
+.stats-error {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 1rem;
+  border: 1px dashed var(--glass-border);
+  border-radius: var(--border-radius);
+  text-align: center;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .stats-cards-row,
+  .stats-skeleton-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-cards-row,
+  .stats-skeleton-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+
+  .stats-card {
+    padding: 1.2rem 1rem;
+  }
+
+  .stats-card__value {
+    font-size: 1.5rem;
+  }
+
+  .platform-title {
+    font-size: 1.15rem;
+  }
+
+  .sparkline {
+    width: 90px;
+  }
+
+  .gh-contribution-wrap {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .stats-cards-row,
+  .stats-skeleton-row {
+    grid-template-columns: 1fr;
+  }
+}
 
 .skills-content {
   max-width: 1200px;
