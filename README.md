@@ -26,21 +26,27 @@ This repository contains the source code for my personal developer portfolio web
 Portfolio/
 ├── public/                 # Static assets directly served by Vite
 │   ├── CV.pdf              # Downloadable resume
-│   └── SVG.svg             # Application favicon
+│   ├── SVG.svg             # Application favicon
+│   └── icons.svg           # Icon spritesheet
 ├── src/                    # Primary application source code
-│   ├── App.jsx             # Main Application container and hooks orchestrator
-│   ├── Header.jsx          # Top navigation menu
-│   ├── Body.jsx            # Main layout wrapper
-│   ├── Projects.jsx        # Horizontal draggable framer-motion carousel and grid
-│   ├── ProfileCard.jsx     # Hero section containing stats, links, and profile image
-│   ├── About.jsx           # Personal biography framework
-│   ├── Services.jsx        # Rendered breakdown of offered technical services
-│   ├── Skill.jsx           # Technical skills display
-│   ├── Contact.jsx         # Contact links and connectivity details
-│   ├── index.css           # Global stylesheets tailored for multi-screen UI
-│   └── main.jsx            # React injection point
+│   ├── assets/             # Images and design assets
+│   ├── Components/         # Modular React components
+│   │   ├── About.jsx       # Personal biography section
+│   │   ├── Body.jsx        # Main layout wrapper
+│   │   ├── Contact.jsx     # Contact links and direct messaging form
+│   │   ├── Header.jsx      # Sticky navigation menu
+│   │   ├── ProfileCard.jsx # Profile overview and social connectivity
+│   │   ├── Projects.jsx    # Draggable Framer Motion project carousel
+│   │   ├── Services.jsx    # Service offerings showcase
+│   │   ├── Skill.jsx       # Technical skill badges
+│   │   └── Stats.jsx       # Interactive experience statistics
+│   ├── App.jsx             # Root application component
+│   ├── index.css           # Global styling and design tokens
+│   ├── main.jsx            # Application entry point
+│   └── usePortfolioLogic.js # Custom hook for shared animation & state logic
 ├── index.html              # HTML shell template
-└── package.json            # Deployment scripts and NPM dependency list
+├── package.json            # Deployment scripts and NPM dependencies
+└── vite.config.js          # Vite environment configuration
 ```
 
 ## Manual Deployment

@@ -1,12 +1,12 @@
 import { useRef, useEffect, useCallback, useState } from "react";
 
-import MyMovieList from "./assets/MyMovieList.png";
-import QRCode from "./assets/QRCode.png";
-import TravelList from "./assets/TravelList.png";
-import Profile from "./assets/Portfolio0.png";
-import CF from "./assets/CF.png";
-import SpaceShooter from "./assets/SpaceShooter.png";
-import CursedKnight from "./assets/CursedKnight.jpeg";
+import MyMovieList from "../assets/MyMovieList.png";
+import QRCode from "../assets/QRCode.png";
+import TravelList from "../assets/TravelList.png";
+import Profile from "../assets/Portfolio0.png";
+import CF from "../assets/CF.png";
+import SpaceShooter from "../assets/SpaceShooter.png";
+import CursedKnight from "../assets/CursedKnight.jpeg";
 
 import {
   // eslint-disable-next-line no-unused-vars

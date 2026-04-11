@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import MoonBabu from "./assets/Moon.jpeg";
-import CFIcon from "./assets/CF.SVG";
+import MoonBabu from "../assets/Moon.jpeg";
+import CFIcon from "../assets/CF.SVG";
 
 const socialLinks = [
   {
@@ -130,7 +130,11 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
                     rel="noopener noreferrer"
                   >
                     {svgSrc ? (
-                      <img src={svgSrc} alt={label} className="social-svg-icon" />
+                      <img
+                        src={svgSrc}
+                        alt={label}
+                        className="social-svg-icon"
+                      />
                     ) : (
                       <i className={icon}></i>
                     )}

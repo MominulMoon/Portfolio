@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import Moon from "./assets/Moon2.jpeg";
+import Moon from "../assets/Moon2.jpeg";
 
 /**
  * About
- * Displays the author's biography block. Registers its own `.stat-item` elements 
- * with the `scrollReveal` prop to ensure they animate into view smoothly 
+ * Displays the author's biography block. Registers its own `.stat-item` elements
+ * with the `scrollReveal` prop to ensure they animate into view smoothly
  * when the user scrolls to the `#about` module.
  */
 function About({ scrollReveal, buttonAction }) {
@@ -12,7 +12,7 @@ function About({ scrollReveal, buttonAction }) {
     if (scrollReveal) {
       const cleanups = [
         scrollReveal(".about-highlights .highlight"),
-        scrollReveal(".floating-card")
+        scrollReveal(".floating-card"),
       ];
       return () => cleanups.forEach((c) => c && c());
     }
@@ -104,7 +104,13 @@ function About({ scrollReveal, buttonAction }) {
               </div>
 
               <div className="about-actions">
-                <a href="/CV.pdf" download="CV.pdf" className="about-btn" onClick={buttonAction} style={{ textDecoration: 'none', display: 'inline-flex' }}>
+                <a
+                  href="/CV.pdf"
+                  download="CV.pdf"
+                  className="about-btn"
+                  onClick={buttonAction}
+                  style={{ textDecoration: "none", display: "inline-flex" }}
+                >
                   <span>Download CV</span>
                   <i className="fas fa-download"></i>
                 </a>

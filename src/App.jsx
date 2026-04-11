@@ -10,9 +10,9 @@ import {
 
 import { useState, useEffect, useCallback } from "react";
 
-import Header from "./Header";
-import Body from "./Body";
-import Contact from "./Contact";
+import Header from "./Components/Header";
+import Body from "./Components/Body";
+import Contact from "./Components/Contact";
 
 import { usePortfolioLogic } from "./usePortfolioLogic";
 
