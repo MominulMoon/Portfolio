@@ -1,22 +1,18 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useRef } from "react";
-import {
-  // eslint-disable-next-line no-unused-vars
-  motion,
-  useInView,
-  useAnimation,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 
-/* ── constants ──────────────────────────────────────────────── */
+// Codeforces and GitHub handles
 const CF_HANDLE = "Mominul_Moon";
 const GH_HANDLE = "MominulMoon";
 
+// API endpoints
 const CF_INFO_URL = `https://codeforces.com/api/user.info?handles=${CF_HANDLE}`;
 const CF_RATING_URL = `https://codeforces.com/api/user.rating?handle=${CF_HANDLE}`;
 const GH_USER_URL = `https://api.github.com/users/${GH_HANDLE}`;
 const GH_REPOS_URL = `https://api.github.com/users/${GH_HANDLE}/repos?per_page=100`;
 
-/* ── rank colour map ────────────────────────────────────────── */
+// Codeforces rank -> colour mapping
 const RANK_COLORS = {
   newbie: "#808080",
   pupil: "#008000",
@@ -30,45 +26,48 @@ const RANK_COLORS = {
   "legendary grandmaster": "#FF0000",
 };
 
-/* ── tiny helpers ───────────────────────────────────────────── */
+// Returns the hex colour for a given rank string
 function rankColor(rank = "") {
   return RANK_COLORS[rank.toLowerCase()] ?? "var(--accent-primary)";
 }
 
+// Capitalises the first letter of every word
 function capitalize(str = "") {
   return str.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-/* ── animated counter ───────────────────────────────────────── */
+// Counts up from 0 to `value` over `duration` seconds
 function AnimatedNumber({ value, duration = 1.4 }) {
   const [display, setDisplay] = useState(0);
-  // eslint-disable-next-line no-unused-vars
-  const controls = useAnimation();
 
   useEffect(() => {
-    let start = 0;
+    let current = 0;
     const end = Number(value);
     if (!end) return;
+
     const step = Math.ceil(end / (duration * 60));
     const timer = setInterval(() => {
-      start += step;
-      if (start >= end) {
+      current += step;
+      if (current >= end) {
         setDisplay(end);
         clearInterval(timer);
-      } else setDisplay(start);
+      } else {
+        setDisplay(current);
+      }
     }, 1000 / 60);
+
     return () => clearInterval(timer);
   }, [value, duration]);
 
   return <span>{display.toLocaleString()}</span>;
 }
 
-/* ── stat card ──────────────────────────────────────────────── */
+// A single stat card that animates in when it enters the viewport
 function StatCard({ icon, label, value, sub, color, delay = 0, href }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
-  const inner = (
+  const card = (
     <motion.div
       ref={ref}
       className="stats-card"
@@ -90,21 +89,24 @@ function StatCard({ icon, label, value, sub, color, delay = 0, href }) {
     </motion.div>
   );
 
-  return href ? (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="stats-card-link"
-    >
-      {inner}
-    </a>
-  ) : (
-    inner
-  );
+  // Wrap in a link if href is provided
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="stats-card-link"
+      >
+        {card}
+      </a>
+    );
+  }
+
+  return card;
 }
 
-/* ── badge pill ─────────────────────────────────────────────── */
+// Coloured pill showing the user's CF rank
 function RankBadge({ rank }) {
   return (
     <span className="rank-badge" style={{ "--rank-color": rankColor(rank) }}>
@@ -113,10 +115,11 @@ function RankBadge({ rank }) {
   );
 }
 
-/* ── section header ─────────────────────────────────────────── */
+// Animated platform title (CF / GitHub) that slides in from the left
 function SectionHeader({ title, delay = 0 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
+
   return (
     <motion.div
       ref={ref}
@@ -130,9 +133,10 @@ function SectionHeader({ title, delay = 0 }) {
   );
 }
 
-/* ── sparkline (mini rating graph) ─────────────────────────── */
+// Mini SVG line chart showing rating history over contests
 function Sparkline({ data }) {
   if (!data || data.length < 2) return null;
+
   const ratings = data.map((d) => d.newRating);
   const min = Math.min(...ratings);
   const max = Math.max(...ratings);
@@ -140,7 +144,8 @@ function Sparkline({ data }) {
     H = 50,
     pad = 4;
 
-  const pts = ratings
+  // Map each rating to an (x, y) point inside the SVG viewBox
+  const points = ratings
     .map((r, i) => {
       const x = pad + (i / (ratings.length - 1)) * (W - pad * 2);
       const y = pad + ((max - r) / (max - min || 1)) * (H - pad * 2);
@@ -148,8 +153,10 @@ function Sparkline({ data }) {
     })
     .join(" ");
 
-  const last = ratings[ratings.length - 1];
-  const trend = last > ratings[0] ? "#10b981" : "#ef4444";
+  const latest = ratings[ratings.length - 1];
+  const trend = latest > ratings[0] ? "#10b981" : "#ef4444";
+  const delta = Math.abs(latest - ratings[0]);
+  const arrow = latest > ratings[0] ? "↑" : "↓";
 
   return (
     <div className="sparkline-wrap">
@@ -159,7 +166,7 @@ function Sparkline({ data }) {
         className="sparkline"
       >
         <polyline
-          points={pts}
+          points={points}
           fill="none"
           stroke={trend}
           strokeWidth="2"
@@ -168,45 +175,64 @@ function Sparkline({ data }) {
         />
       </svg>
       <span className="sparkline-label" style={{ color: trend }}>
-        {last > ratings[0] ? "↑" : "↓"} {Math.abs(last - ratings[0])} pts
-        overall
+        {arrow} {delta} pts overall
       </span>
     </div>
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
-   Main component
-═══════════════════════════════════════════════════════════════ */
+// Row of skeleton placeholder cards shown while data loads
+function SkeletonRow() {
+  return (
+    <motion.div
+      className="stats-skeleton-row"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="stats-skeleton" />
+      ))}
+    </motion.div>
+  );
+}
+
 export default function Stats() {
   const [cf, setCf] = useState(null);
   const [gh, setGh] = useState(null);
   const [cfErr, setCfErr] = useState(false);
   const [ghErr, setGhErr] = useState(false);
 
-  /* fetch Codeforces */
+  const headerRef = useRef(null);
+  const headerInView = useInView(headerRef, { once: true });
+
+  // Fetch Codeforces user info and rating history in parallel
   useEffect(() => {
     Promise.all([fetch(CF_INFO_URL), fetch(CF_RATING_URL)])
       .then(async ([infoRes, ratingRes]) => {
         const info = await infoRes.json();
         const rating = await ratingRes.json();
+
         if (info.status !== "OK") throw new Error("CF info failed");
-        const user = info.result[0];
-        const hist = rating.status === "OK" ? rating.result : [];
-        setCf({ user, history: hist });
+
+        setCf({
+          user: info.result[0],
+          history: rating.status === "OK" ? rating.result : [],
+        });
       })
       .catch(() => setCfErr(true));
   }, []);
 
-  /* fetch GitHub */
+  // Fetch GitHub profile and all repos (to calculate total stars)
   useEffect(() => {
     Promise.all([fetch(GH_USER_URL), fetch(GH_REPOS_URL)])
       .then(async ([userRes, reposRes]) => {
         const user = await userRes.json();
         const repos = await reposRes.json();
+
         const stars = Array.isArray(repos)
-          ? repos.reduce((s, r) => s + (r.stargazers_count || 0), 0)
+          ? repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0)
           : 0;
+
         setGh({
           user,
           stars,
@@ -216,13 +242,10 @@ export default function Stats() {
       .catch(() => setGhErr(true));
   }, []);
 
-  const headerRef = useRef(null);
-  const headerInView = useInView(headerRef, { once: true });
-
   return (
     <section id="stats" className="section stats-section">
       <div className="container">
-        {/* Section title */}
+        {/* Section heading */}
         <motion.h2
           ref={headerRef}
           className="section-title"
@@ -233,7 +256,7 @@ export default function Stats() {
           Competitive & Dev Stats
         </motion.h2>
 
-        {/* ── Codeforces ───────────────────────────────────────── */}
+        {/* Codeforces section */}
         <div className="stats-platform-block">
           <SectionHeader
             title={
@@ -267,19 +290,10 @@ export default function Stats() {
                 Could not load Codeforces data — please try again later.
               </motion.p>
             ) : !cf ? (
-              <motion.div
-                key="cf-skeleton"
-                className="stats-skeleton-row"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="stats-skeleton" />
-                ))}
-              </motion.div>
+              <SkeletonRow key="cf-skeleton" />
             ) : (
               <motion.div key="cf-data">
-                {/* rank badge row */}
+                {/* Rank badge + rating sparkline */}
                 <motion.div
                   className="rank-row"
                   initial={{ opacity: 0, y: 16 }}
@@ -290,6 +304,7 @@ export default function Stats() {
                   <Sparkline data={cf.history} />
                 </motion.div>
 
+                {/* Stat cards */}
                 <div className="stats-cards-row">
                   <StatCard
                     icon="🏆"
@@ -333,9 +348,10 @@ export default function Stats() {
           </AnimatePresence>
         </div>
 
-        {/* ── GitHub ───────────────────────────────────────────── */}
+        {/* GitHub section */}
         <div className="stats-platform-block">
           <SectionHeader
+            delay={0.05}
             title={
               <a
                 href={`https://github.com/${GH_HANDLE}`}
@@ -354,7 +370,6 @@ export default function Stats() {
                 <span className="platform-handle">@{GH_HANDLE}</span>
               </a>
             }
-            delay={0.05}
           />
 
           <AnimatePresence mode="wait">
@@ -368,19 +383,10 @@ export default function Stats() {
                 Could not load GitHub data — please try again later.
               </motion.p>
             ) : !gh ? (
-              <motion.div
-                key="gh-skeleton"
-                className="stats-skeleton-row"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="stats-skeleton" />
-                ))}
-              </motion.div>
+              <SkeletonRow key="gh-skeleton" />
             ) : (
               <motion.div key="gh-data">
-                {/* GitHub contribution image */}
+                {/* GitHub contribution heatmap */}
                 <motion.div
                   className="gh-contribution-wrap"
                   initial={{ opacity: 0, scale: 0.97 }}
@@ -394,6 +400,7 @@ export default function Stats() {
                   />
                 </motion.div>
 
+                {/* Stat cards */}
                 <div className="stats-cards-row">
                   <StatCard
                     icon="📦"
