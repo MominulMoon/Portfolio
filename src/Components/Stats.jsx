@@ -9,6 +9,7 @@ const GH_HANDLE = "MominulMoon";
 // API endpoints
 const CF_INFO_URL = `https://codeforces.com/api/user.info?handles=${CF_HANDLE}`;
 const CF_RATING_URL = `https://codeforces.com/api/user.rating?handle=${CF_HANDLE}`;
+const CF_STATUS_URL = `https://codeforces.com/api/user.status?handle=${CF_HANDLE}`;
 const GH_USER_URL = `https://api.github.com/users/${GH_HANDLE}`;
 const GH_REPOS_URL = `https://api.github.com/users/${GH_HANDLE}/repos?per_page=100`;
 
@@ -207,16 +208,35 @@ export default function Stats() {
 
   // Fetch Codeforces user info and rating history in parallel
   useEffect(() => {
-    Promise.all([fetch(CF_INFO_URL), fetch(CF_RATING_URL)])
-      .then(async ([infoRes, ratingRes]) => {
+    Promise.all([
+      fetch(CF_INFO_URL),
+      fetch(CF_RATING_URL),
+      fetch(CF_STATUS_URL),
+    ])
+      .then(async ([infoRes, ratingRes, statusRes]) => {
         const info = await infoRes.json();
         const rating = await ratingRes.json();
+        const status = await statusRes.json();
 
         if (info.status !== "OK") throw new Error("CF info failed");
+
+        // Calculate unique solved problems
+        let solvedCount = 0;
+        if (status.status === "OK") {
+          const solvedSet = new Set();
+          status.result.forEach((submission) => {
+            if (submission.verdict === "OK") {
+              const { contestId, index } = submission.problem;
+              solvedSet.add(`${contestId}${index}`);
+            }
+          });
+          solvedCount = solvedSet.size;
+        }
 
         setCf({
           user: info.result[0],
           history: rating.status === "OK" ? rating.result : [],
+          solvedCount,
         });
       })
       .catch(() => setCfErr(true));
@@ -325,12 +345,21 @@ export default function Stats() {
                     href={`https://codeforces.com/profile/${CF_HANDLE}`}
                   />
                   <StatCard
+                    icon="🧩"
+                    label="Solved Problems"
+                    value={cf.solvedCount ?? 0}
+                    sub="unique problems"
+                    color="#3b82f6"
+                    delay={0.26}
+                    href={`https://codeforces.com/submissions/${CF_HANDLE}`}
+                  />
+                  <StatCard
                     icon="🎯"
                     label="Contests"
                     value={cf.history.length}
                     sub="participated"
                     color="#a78bfa"
-                    delay={0.26}
+                    delay={0.34}
                     href={`https://codeforces.com/contests/with/${CF_HANDLE}`}
                   />
                   <StatCard
@@ -339,7 +368,7 @@ export default function Stats() {
                     value={cf.user.contribution ?? 0}
                     sub="community pts"
                     color="#10b981"
-                    delay={0.34}
+                    delay={0.42}
                     href={`https://codeforces.com/profile/${CF_HANDLE}`}
                   />
                 </div>

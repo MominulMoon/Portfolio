@@ -1117,7 +1117,7 @@ header.scrolled {
 /* ── Cards row ────────────────────────────────────────────── */
 .stats-cards-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.25rem;
   margin-top: 1.5rem;
 }
@@ -1299,14 +1299,14 @@ header.scrolled {
 @media (max-width: 1024px) {
   .stats-cards-row,
   .stats-skeleton-row {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
 
 @media (max-width: 600px) {
   .stats-cards-row,
   .stats-skeleton-row {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 0.9rem;
   }
 
