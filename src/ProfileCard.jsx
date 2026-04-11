@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import MoonBabu from "./assets/Moon.jpeg";
+import CFIcon from "./assets/CF.SVG";
 
 const socialLinks = [
   {
@@ -25,6 +26,12 @@ const socialLinks = [
     className: "instagram",
     icon: "fab fa-instagram",
     href: "https://www.instagram.com/mdmominulislammoon/",
+  },
+  {
+    label: "Codeforces",
+    className: "codeforce",
+    svgSrc: CFIcon,
+    href: "https://codeforces.com/profile/Mominul_Moon",
   },
 ];
 
@@ -113,7 +120,7 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
               </div>
 
               <div className="social-links">
-                {socialLinks.map(({ label, className, icon, href }) => (
+                {socialLinks.map(({ label, className, icon, svgSrc, href }) => (
                   <a
                     key={label}
                     href={href}
@@ -122,7 +129,11 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i className={icon}></i>
+                    {svgSrc ? (
+                      <img src={svgSrc} alt={label} className="social-svg-icon" />
+                    ) : (
+                      <i className={icon}></i>
+                    )}
                   </a>
                 ))}
               </div>

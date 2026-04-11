@@ -492,6 +492,25 @@ header.scrolled {
   color: white;
 }
 
+.social-icon.codeforce:hover {
+  background: #1f8ac0;
+  color: white;
+}
+
+.social-svg-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: var(--transition-fast);
+}
+
+.social-icon.codeforce:hover .social-svg-icon {
+  filter: brightness(0) invert(1);
+  opacity: 1;
+}
+
 /* Enhanced Home Image */
 .home-image {
   position: relative;
@@ -1770,4 +1789,3 @@ body.loaded {
     display: grid !important;
   }
 }
-
