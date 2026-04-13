@@ -1,23 +1,39 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Moon from "../assets/Moon2.jpeg";
 
 const highlights = [
   {
     icon: "fas fa-graduation-cap",
     title: "Education",
-    content: "Computer Science Engineering | RUET",
+    content: "Academic background and current progress",
+    details: [
+      "2nd Year RUET CSE — CG: 3.84 (current)",
+      "HSC — Government Azizul Haque College — GPA: 5.00",
+      "SSC — Gabtoli Pilot High School — GPA: 5.00",
+    ],
   },
   {
     icon: "fas fa-map-marker-alt",
     title: "Location",
-    content: "Kazla,Rajshahi,Bangladesh",
+    content: "Tikapara, Rajshahi, Bangladesh",
+    details: [
+      "I am currently based in Tikapara, Rajshahi, Bangladesh.",
+      "Open Google Maps to view the exact location and directions.",
+    ],
+    link: "https://maps.app.goo.gl/zBYm7x4pf2hXhb229",
+    linkLabel: "Open in Google Maps",
   },
   {
     icon: "fas fa-briefcase",
     title: "Currently Learning",
     content: "MERN Stack, Data Science, Machine Learning",
+    details: [
+      "MERN Stack: Building full-stack apps with React, Node.js, Express, and MongoDB.",
+      "Data Science: Practicing data cleaning, analysis, and visualization with Python tools.",
+      "Machine Learning: Learning core concepts, model evaluation, and practical workflows.",
+    ],
   },
 ];
 
@@ -28,6 +44,11 @@ const highlights = [
  * when the user scrolls to the `#about` module.
  */
 function About({ scrollReveal, buttonAction }) {
+  const sectionRef = useRef(null);
+  const [activeHighlight, setActiveHighlight] = useState(null);
+  const [originRect, setOriginRect] = useState(null);
+  const [targetRect, setTargetRect] = useState(null);
+
   useEffect(() => {
     if (scrollReveal) {
       const cleanups = [
@@ -38,6 +59,16 @@ function About({ scrollReveal, buttonAction }) {
     }
   }, [scrollReveal]);
 
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        handleCloseHighlight();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   const handleCardMouseMove = (e) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -45,9 +76,50 @@ function About({ scrollReveal, buttonAction }) {
     card.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
+  const handleOpenHighlight = (item, rect) => {
+    const sectionRect = sectionRef.current?.getBoundingClientRect();
+    if (rect && sectionRect) {
+      const nextOrigin = {
+        top: rect.top - sectionRect.top,
+        left: rect.left - sectionRect.left,
+        width: rect.width,
+        height: rect.height,
+      };
+      const margin = 14;
+      const width = Math.min(780, sectionRect.width * 0.84);
+      const height = Math.min(410, window.innerHeight * 0.62);
+      const centeredLeft = (sectionRect.width - width) / 2;
+      const centeredTop = Math.max(
+        margin,
+        Math.min(
+          nextOrigin.top + rect.height / 2 - height / 2,
+          Math.max(margin, sectionRect.height - height - margin),
+        ),
+      );
+
+      setOriginRect(nextOrigin);
+      setTargetRect({
+        top: centeredTop,
+        left: centeredLeft,
+        width,
+        height,
+      });
+    }
+
+    setActiveHighlight(item);
+  };
+
+  const handleCloseHighlight = () => {
+    setActiveHighlight(null);
+    setTimeout(() => {
+      setOriginRect(null);
+      setTargetRect(null);
+    }, 260);
+  };
+
   return (
     <div>
-      <section id="about" className="section about">
+      <section id="about" ref={sectionRef} className="section about">
         <div className="container">
           <div className="about-content">
             <motion.div
@@ -121,10 +193,19 @@ function About({ scrollReveal, buttonAction }) {
                 {highlights.map((item) => (
                   <motion.div
                     key={item.title}
-                    className="highlight dynamic-highlight"
+                    className="highlight dynamic-highlight highlight-button"
                     whileHover={{ y: -6, rotateX: 2 }}
                     transition={{ type: "spring", stiffness: 220, damping: 20 }}
                     onMouseMove={handleCardMouseMove}
+                    onClick={(e) =>
+                      handleOpenHighlight(item, e.currentTarget.getBoundingClientRect())
+                    }
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) =>
+                      (e.key === "Enter" || e.key === " ") &&
+                      handleOpenHighlight(item, e.currentTarget.getBoundingClientRect())
+                    }
                   >
                     <i className={item.icon}></i>
                     <div>
@@ -150,6 +231,80 @@ function About({ scrollReveal, buttonAction }) {
             </div>
           </div>
         </div>
+
+        <AnimatePresence>
+          {activeHighlight && (
+            <motion.div
+              className="about-expand-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={handleCloseHighlight}
+            >
+              <motion.div
+                className="about-expand-card"
+                initial={
+                  originRect
+                    ? {
+                        opacity: 0.35,
+                        top: originRect.top,
+                        left: originRect.left,
+                        width: originRect.width,
+                        height: originRect.height,
+                      }
+                    : { opacity: 0, scale: 0.96 }
+                }
+                animate={{
+                  opacity: 1,
+                  top: targetRect?.top ?? 16,
+                  left: targetRect?.left ?? 16,
+                  width: targetRect?.width ?? "calc(100% - 32px)",
+                  height: targetRect?.height ?? 420,
+                }}
+                exit={
+                  originRect
+                    ? {
+                        opacity: 0.35,
+                        top: originRect.top,
+                        left: originRect.left,
+                        width: originRect.width,
+                        height: originRect.height,
+                      }
+                    : { opacity: 0, scale: 0.96 }
+                }
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="about-expand-close"
+                  onClick={handleCloseHighlight}
+                  aria-label="Close details"
+                >
+                  ×
+                </button>
+                <h3>
+                  <i className={activeHighlight.icon}></i>
+                  <span>{activeHighlight.title}</span>
+                </h3>
+                <ul>
+                  {activeHighlight.details?.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+                {activeHighlight.link && (
+                  <a
+                    href={activeHighlight.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="about-map-link"
+                  >
+                    {activeHighlight.linkLabel}
+                  </a>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
     </div>
   );

@@ -2,6 +2,25 @@ import { useRef, useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+
+function RetroOrb() {
+  const meshRef = useRef(null);
+
+  useFrame((_, delta) => {
+    if (!meshRef.current) return;
+    meshRef.current.rotation.y += delta * 0.45;
+    meshRef.current.rotation.x += delta * 0.25;
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <torusKnotGeometry args={[0.9, 0.22, 120, 18]} />
+      <meshStandardMaterial color="#00d4ff" wireframe />
+    </mesh>
+  );
+}
 
 const SERVICE_ID = "service_mct6aw4";
 const TEMPLATE_ID = "template_046mmig";
@@ -51,7 +70,7 @@ function Contact({ scrollReveal }) {
     if (scrollReveal) {
       const cleanups = [
         scrollReveal(".contact-item"),
-        scrollReveal(".form-group")
+        scrollReveal(".form-group"),
       ];
       return () => cleanups.forEach((c) => c && c());
     }
@@ -82,29 +101,57 @@ function Contact({ scrollReveal }) {
   };
 
   return (
-    <section id="contact" className="section contact">
-      <div className="container">
+    <section
+      id="contact"
+      className="section contact retro-contact overflow-hidden"
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-20">
+        <div className="retro-grid-lines h-full w-full" />
+      </div>
+
+      <div className="container relative z-10">
         <h2 className="section-title">Get In Touch</h2>
+
+        <div className="relative mb-8 h-40 w-full overflow-hidden rounded-2xl border border-cyan-400/30 bg-black/35">
+          <Canvas camera={{ position: [0, 0, 3.6], fov: 50 }}>
+            <ambientLight intensity={0.3} />
+            <pointLight position={[2, 2, 3]} intensity={1.4} color="#00d4ff" />
+            <RetroOrb />
+            <OrbitControls
+              enableZoom={false}
+              enablePan={false}
+              autoRotate
+              autoRotateSpeed={0.9}
+            />
+          </Canvas>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/10 to-transparent" />
+        </div>
+
         <div className="contact-content">
-          <div className="contact-info">
+          <div className="contact-info space-y-4">
             {contactsData.map((item) => (
               <motion.div
                 key={item.title}
-                className="contact-item dynamic-contact-item"
-                whileHover={{ y: -8, rotateX: 2, rotateY: -2 }}
+                className="contact-item dynamic-contact-item border-cyan-400/35 bg-black/45 shadow-[0_0_24px_rgba(0,212,255,0.17)] backdrop-blur-md"
+                whileHover={{ y: -8, rotateX: 2, rotateY: -2, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 220, damping: 20 }}
                 onMouseMove={handleCardMouseMove}
               >
-                <div className="contact-icon">
+                <div className="contact-icon !bg-transparent border border-cyan-300/60 text-cyan-300 shadow-[0_0_20px_rgba(0,212,255,0.25)]">
                   <i className={item.icon}></i>
                 </div>
                 <div className="contact-details">
-                  <h3>{item.title}</h3>
-                  <p>{item.value}</p>
+                  <h3 className="font-mono uppercase tracking-[0.18em] text-cyan-200">
+                    {item.title}
+                  </h3>
+                  <p className="text-slate-300">{item.value}</p>
                   <a
                     href={item.link}
                     target={item.link.startsWith("http") ? "_blank" : undefined}
-                    rel={item.link.startsWith("http") ? "noreferrer" : undefined}
+                    rel={
+                      item.link.startsWith("http") ? "noreferrer" : undefined
+                    }
+                    className="inline-block font-mono text-xs uppercase tracking-[0.16em] text-cyan-300 hover:text-cyan-200"
                   >
                     {item.action}
                   </a>
@@ -114,22 +161,43 @@ function Contact({ scrollReveal }) {
           </div>
 
           <motion.div
-            className="contact-form contact-form-3d"
+            className="contact-form contact-form-3d border border-cyan-400/30 bg-black/50 shadow-[0_0_32px_rgba(0,212,255,0.13)] backdrop-blur-md"
             whileHover={{ rotateX: 2, rotateY: -2 }}
             transition={{ duration: 0.35 }}
             onMouseMove={handleCardMouseMove}
           >
             <form ref={formRef} onSubmit={handleSubmit}>
               <div className="form-group">
-                <input type="text" name="from_name" id="name" required />
+                <input
+                  type="text"
+                  name="from_name"
+                  id="name"
+                  required
+                  placeholder=" "
+                  className="font-mono tracking-wide"
+                />
                 <label htmlFor="name">Your Name</label>
               </div>
               <div className="form-group">
-                <input type="email" name="from_email" id="email" required />
+                <input
+                  type="email"
+                  name="from_email"
+                  id="email"
+                  required
+                  placeholder=" "
+                  className="font-mono tracking-wide"
+                />
                 <label htmlFor="email">Your Email</label>
               </div>
               <div className="form-group">
-                <input type="text" name="subject" id="subject" required />
+                <input
+                  type="text"
+                  name="subject"
+                  id="subject"
+                  required
+                  placeholder=" "
+                  className="font-mono tracking-wide"
+                />
                 <label htmlFor="subject">Your Subject</label>
               </div>
               <div className="form-group">
@@ -138,6 +206,8 @@ function Contact({ scrollReveal }) {
                   id="message"
                   rows="5"
                   required
+                  placeholder=" "
+                  className="font-mono tracking-wide"
                 ></textarea>
                 <label htmlFor="message">Your Message</label>
               </div>
