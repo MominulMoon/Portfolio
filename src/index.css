@@ -1,5 +1,7 @@
 /* CSS Variables */
 /*This CSS file was premade by Ayan24 and modified by me for this project */
+/* Import Tailwind */
+@import "tailwindcss";
 :root {
   --bg-primary: #0a0a0a;
   --bg-secondary: #111111;

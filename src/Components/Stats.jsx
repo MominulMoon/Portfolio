@@ -204,6 +204,7 @@ export default function Stats() {
   const [ghErr, setGhErr] = useState(false);
 
   const headerRef = useRef(null);
+  const sectionRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true });
 
   // Fetch Codeforces user info and rating history in parallel
