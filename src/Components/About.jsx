@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-unused-vars
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+  animate,
+} from "framer-motion";
 import Moon from "../assets/Moon2.jpeg";
 
 const highlights = [
@@ -45,9 +51,14 @@ const highlights = [
  */
 function About({ scrollReveal, buttonAction }) {
   const sectionRef = useRef(null);
+  const imageBoundsRef = useRef(null);
   const [activeHighlight, setActiveHighlight] = useState(null);
   const [originRect, setOriginRect] = useState(null);
   const [targetRect, setTargetRect] = useState(null);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const smoothRotateX = useSpring(rotateX, { stiffness: 300, damping: 30, mass: 0.45 });
+  const smoothRotateY = useSpring(rotateY, { stiffness: 300, damping: 30, mass: 0.45 });
 
   useEffect(() => {
     if (scrollReveal) {
@@ -74,6 +85,28 @@ function About({ scrollReveal, buttonAction }) {
     const rect = card.getBoundingClientRect();
     card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     card.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+
+  const handleImageMouseEnter = (e) => {
+    imageBoundsRef.current = e.currentTarget.getBoundingClientRect();
+  };
+
+  // Use cached image bounds from pointer-enter so we avoid layout reads on every mousemove.
+  const handleImageMouseMove = (e) => {
+    if (!imageBoundsRef.current) return;
+    const rect = imageBoundsRef.current;
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const nx = Math.max(-0.5, Math.min(0.5, px - 0.5));
+    const ny = Math.max(-0.5, Math.min(0.5, 0.5 - py));
+    rotateY.set(nx * 11);
+    rotateX.set(ny * 11);
+  };
+
+  const handleImageMouseLeave = () => {
+    imageBoundsRef.current = null;
+    animate(rotateX, 0, { duration: 0.45 });
+    animate(rotateY, 0, { duration: 0.45 });
   };
 
   const handleOpenHighlight = (item, rect) => {
@@ -131,8 +164,15 @@ function About({ scrollReveal, buttonAction }) {
             >
               <motion.div
                 className="image-wrapper about-image-3d"
-                whileHover={{ rotateY: -5, rotateX: 5, scale: 1.01 }}
-                transition={{ duration: 0.35 }}
+                style={{
+                  rotateX: smoothRotateX,
+                  rotateY: smoothRotateY,
+                  transformPerspective: 1300,
+                }}
+                whileHover={{ scale: 1.01 }}
+                onMouseEnter={handleImageMouseEnter}
+                onMouseMove={handleImageMouseMove}
+                onMouseLeave={handleImageMouseLeave}
               >
                 <img src={Moon} alt="About Asep" className="about-img" />
                 <div className="experience-badge">

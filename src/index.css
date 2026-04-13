@@ -1608,21 +1608,6 @@ header.scrolled {
   box-shadow: var(--shadow-hover);
 }
 
-.service-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--accent-gradient);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  font-size: 2rem;
-  color: var(--bg-primary);
-  position: relative;
-  z-index: 1;
-}
-
 .service-card h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
@@ -1672,11 +1657,6 @@ header.scrolled {
   border-radius: 50%;
   filter: blur(100px);
   animation: float 10s ease-in-out infinite reverse;
-}
-
-.projects-content {
-  max-width: 1300px;
-  margin: 0 auto;
 }
 
 .projects-grid {
@@ -2190,56 +2170,6 @@ header.scrolled {
   }
 }
 
-/* ─── Ripple Effect ──────────────────────────────────────────────────────────── */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  transform: scale(0);
-  animation: ripple-expand 0.6s linear forwards;
-  pointer-events: none;
-}
-
-@keyframes ripple-expand {
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-/* ─── Toast Notifications ────────────────────────────────────────────────────── */
-.toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  color: #fff;
-  font-weight: 500;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  z-index: 9999;
-  transform: translateX(120%);
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.toast-visible {
-  transform: translateX(0);
-}
-
-.toast-info {
-  background: var(--accent-primary);
-  color: var(--bg-primary);
-}
-.toast-success {
-  background: #10b981;
-}
-.toast-error {
-  background: #ef4444;
-}
-
 /* ─── Page Load Fade-in ──────────────────────────────────────────────────────── */
 body.loaded {
   animation: page-fade-in 0.4s ease both;
@@ -2302,63 +2232,6 @@ body.loaded {
   width: 100% !important;
   height: 100% !important;
 }
-/* ── Legacy carousel wrappers (kept inert) ─────────────────── */
-.carousel-wrapper {
-  position: relative;
-  display: none;
-}
-
-/* ── Arrow buttons ──────────────────────────────────────────── */
-.carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  font-size: 22px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: background 0.2s;
-}
-
-.carousel-arrow:hover {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.carousel-arrow--left {
-  left: 10px;
-}
-.carousel-arrow--right {
-  right: 10px;
-}
-
-/* ── Scrollable container ───────────────────────────────────── */
-.carousel-container {
-  overflow: hidden;
-  cursor: grab;
-}
-
-.carousel-container.grabbing {
-  cursor: grabbing;
-}
-
-/* ── Draggable track ────────────────────────────────────────── */
-.carousel-track {
-  display: flex;
-  gap: 24px;
-  padding: 16px 4px;
-  width: max-content;
-  user-select: none;
-}
 
 /* ── Individual project card ────────────────────────────────── */
 .project-card {
@@ -2403,14 +2276,6 @@ body.loaded {
   justify-content: center;
   font-size: 12px;
   flex-shrink: 0;
-}
-
-/* ── Mobile Responsive Carousel Adjustments ───────────────────── */
-.mobile-projects-grid {
-  display: grid !important;
-}
-.mobile-projects-grid .project-card {
-  width: 100%;
 }
 
 @media (max-width: 900px) {
