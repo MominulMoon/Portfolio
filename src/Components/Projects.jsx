@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 import MyMovieList from "../assets/MyMovieList.png";
 import QRCode from "../assets/QRCode.png";
@@ -12,6 +12,8 @@ import {
   // eslint-disable-next-line no-unused-vars
   motion,
   useMotionValue,
+  useScroll,
+  useTransform,
   animate,
   AnimatePresence,
 } from "framer-motion";
@@ -106,9 +108,6 @@ const projectsData = [
   },
 ];
 
-const CARD_WIDTH = 364;
-const SPEED = 0.6;
-
 function Toast({ message, onDone }) {
   return (
     <AnimatePresence>
@@ -130,6 +129,94 @@ function Toast({ message, onDone }) {
   );
 }
 
+function ProjectCard({ project, onLiveClick }) {
+  const cardRef = useRef(null);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"],
+  });
+  const depthY = useTransform(scrollYProgress, [0, 0.5, 1], [120, 0, -120]);
+  const depthScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.84, 1.03, 0.88]);
+  const scrollRotateX = useTransform(scrollYProgress, [0, 0.5, 1], [18, 0, -18]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.35]);
+
+  const onMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    rotateY.set((px - 0.5) * 10);
+    rotateX.set((0.5 - py) * 10);
+  };
+
+  const resetTilt = () => {
+    animate(rotateX, 0, { duration: 0.4 });
+    animate(rotateY, 0, { duration: 0.4 });
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className="project-card group relative"
+      style={{
+        rotateX,
+        rotateY,
+        y: depthY,
+        scale: depthScale,
+        opacity,
+        transformPerspective: 1200,
+      }}
+      onMouseMove={onMove}
+      onMouseLeave={resetTilt}
+      whileHover={{
+        scale: 1.03,
+        rotateZ: 0.5,
+        transition: { duration: 0.2 },
+      }}
+    >
+      <motion.div className="project-card-glass" style={{ rotateX: scrollRotateX }}>
+        <div className="project-image">
+          <img src={project.image} alt={project.alt} draggable="false" />
+          <div className="project-overlay">
+            <div className="project-links">
+              <a
+                href={project.liveLink || "#"}
+                className={`project-link ${!project.liveLink ? "project-link--disabled" : ""}`}
+                rel="noreferrer"
+                title={project.liveLink ? "Live demo" : "No live demo available"}
+                onClick={(e) => onLiveClick(e, project.liveLink, project.title)}
+              >
+                <i className="fas fa-external-link-alt"></i>
+              </a>
+              <a
+                href={project.githubLink}
+                className="project-link"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="View GitHub Repository"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <i className="fab fa-github"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="project-info">
+          <h3>{project.title}</h3>
+          <p>{project.description}</p>
+          <div className="project-tech">
+            {project.tech.map((t, i) => (
+              <span key={i}>{t}</span>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 /**
  * Projects
  * An interactive portfolio gallery that fetches a declarative list of projects
@@ -137,39 +224,7 @@ function Toast({ message, onDone }) {
  * Triggers Framer layout animations when filtering and scrollReveal when entering the viewport.
  */
 function Projects({ scrollReveal }) {
-  const containerRef = useRef(null);
-  const carouselRef = useRef(null);
-  const rafRef = useRef(null);
-  const isPaused = useRef(false);
-  // Track if mouse is hovering over carousel/buttons to prevent premature auto-scroll resume
-  const isHovered = useRef(false);
-  const x = useMotionValue(0);
   const [toast, setToast] = useState(null);
-
-  // Calculates the physical maximum scroll offset allowed so we don't drag past the last item
-  const getMaxDrag = () => {
-    if (!carouselRef.current || !containerRef.current) return 0;
-    return -(
-      carouselRef.current.scrollWidth - containerRef.current.offsetWidth
-    );
-  };
-
-  const startScroll = useCallback(() => {
-    const tick = () => {
-      if (!isPaused.current) {
-        const current = x.get();
-        const max = getMaxDrag();
-        x.set(current <= max ? 0 : current - SPEED);
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-  }, [x]);
-
-  useEffect(() => {
-    startScroll();
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [startScroll]);
 
   useEffect(() => {
     if (scrollReveal) {
@@ -177,48 +232,6 @@ function Projects({ scrollReveal }) {
       return () => cleanup && cleanup();
     }
   }, [scrollReveal]);
-
-  // Pause auto-scroll when mouse enters container or arrows
-  const handleMouseEnter = () => {
-    isHovered.current = true;
-    isPaused.current = true;
-  };
-
-  // Resume auto-scroll when mouse leaves container or arrows
-  const handleMouseLeave = () => {
-    isHovered.current = false;
-    isPaused.current = false;
-  };
-
-  // Handle drag pausing specifically without altering hover state
-  const handleDragStart = () => {
-    isPaused.current = true;
-  };
-
-  const handleDragEnd = () => {
-    if (!isHovered.current) {
-      isPaused.current = false;
-    }
-  };
-
-  const moveTo = (delta) => {
-    isPaused.current = true;
-    // Clamp the next calculated offset between 0 and getMaxDrag()
-    const next = Math.min(0, Math.max(x.get() + delta, getMaxDrag()));
-
-    // Animate the Framer motion value 'x' to the new offset, pausing auto-scroll during transition
-    animate(x, next, {
-      type: "spring",
-      stiffness: 250,
-      damping: 28,
-      onComplete: () => {
-        // ONLY resume auto-scroll if the mouse hasn't returned/stayed inside the element
-        if (!isHovered.current) {
-          isPaused.current = false;
-        }
-      },
-    });
-  };
 
   const handleLiveClick = (e, liveLink, title) => {
     e.stopPropagation();
@@ -232,114 +245,19 @@ function Projects({ scrollReveal }) {
     }
   };
 
-  // Extracts individual project card JSX into a reusable function to prevent duplication
-  // between the desktop carousel and the mobile CSS grid components.
-  const renderProjectCard = (project) => (
-    <motion.div
-      key={project.id}
-      className="project-card"
-      // Triggers a slight magnification effect when moving the mouse over the card
-      whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-    >
-      <div className="project-image">
-        <img src={project.image} alt={project.alt} draggable="false" />
-        <div className="project-overlay">
-          <div className="project-links">
-            {/* Live Demo Link: dynamically disabled if the URL is missing. Intercepts clicks to show a Toast notification if empty. */}
-            <a
-              href={project.liveLink || "#"}
-              className={`project-link ${!project.liveLink ? "project-link--disabled" : ""}`}
-              rel="noreferrer"
-              title={project.liveLink ? "Live demo" : "No live demo available"}
-              onClick={(e) =>
-                handleLiveClick(e, project.liveLink, project.title)
-              }
-            >
-              <i className="fas fa-external-link-alt"></i>
-            </a>
-
-            {/* GitHub Repo Link: Stops click event propagation so that interacting with the link doesn't accidentally trigger parent framer-motion drag events. */}
-            <a
-              href={project.githubLink}
-              className="project-link"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="View GitHub Repository"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <i className="fab fa-github"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div className="project-info">
-        <h3>{project.title}</h3>
-        <p>{project.description}</p>
-        <div className="project-tech">
-          {/* Automatically generate pills for each tech stack string */}
-          {project.tech.map((t, i) => (
-            <span key={i}>{t}</span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-
   return (
     <section id="project" className="section projects">
-      <div className="container">
+      <div className="container perspective-[1200px]">
         <h2 className="section-title">Featured Projects</h2>
 
-        {/* Mobile View: Vertical Grid */}
-        <div className="projects-grid mobile-projects-grid">
-          {projectsData.map((project) => renderProjectCard(project))}
-        </div>
-
-        {/* Desktop View: Framer Motion Carousel */}
-        <div className="carousel-wrapper desktop-carousel">
-          <button
-            aria-label="Scroll left"
-            className="carousel-arrow carousel-arrow--left"
-            onClick={() => moveTo(+CARD_WIDTH)}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            ‹
-          </button>
-
-          <button
-            aria-label="Scroll right"
-            className="carousel-arrow carousel-arrow--right"
-            onClick={() => moveTo(-CARD_WIDTH)}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            ›
-          </button>
-
-          <div
-            ref={containerRef}
-            className="carousel-container"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onMouseDown={(e) => e.currentTarget.classList.add("grabbing")}
-            onMouseUp={(e) => e.currentTarget.classList.remove("grabbing")}
-          >
-            <motion.div
-              ref={carouselRef}
-              className="carousel-track"
-              drag="x"
-              dragConstraints={containerRef}
-              dragElastic={0.08}
-              dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
-              style={{ x, touchAction: "pan-y" }}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              whileTap={{ cursor: "grabbing" }}
-            >
-              {projectsData.map((project) => renderProjectCard(project))}
-            </motion.div>
-          </div>
+        <div className="projects-grid projects-grid-3d">
+          {projectsData.map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onLiveClick={handleLiveClick}
+            />
+          ))}
         </div>
       </div>
 

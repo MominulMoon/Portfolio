@@ -42,6 +42,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  position: relative;
+  z-index: 0;
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -232,6 +237,32 @@ header.scrolled {
   align-items: center;
   padding: 8rem 0 6rem;
   position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+}
+
+.section::after {
+  content: "";
+  position: absolute;
+  inset: 8% 6%;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(0, 212, 255, 0.12), transparent 38%),
+    radial-gradient(circle at 82% 75%, rgba(120, 90, 255, 0.1), transparent 42%);
+  filter: blur(45px);
+  transform: translateZ(-60px) scale(1.06);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.65;
+}
+
+.section > .container {
+  position: relative;
+  z-index: 2;
+}
+
+.body-3d-space {
+  perspective: 1400px;
 }
 
 .section-title {
@@ -589,7 +620,7 @@ header.scrolled {
 }
 /* Enhanced About Section */
 .about {
-  background: var(--bg-secondary);
+  background: rgba(17, 17, 17, 0.78);
   position: relative;
 }
 
@@ -617,6 +648,7 @@ header.scrolled {
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  perspective: 1300px;
 }
 
 .about-image {
@@ -674,6 +706,11 @@ header.scrolled {
   gap: 2rem;
 }
 
+.about-image-3d {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
 .about-description {
   display: flex;
   flex-direction: column;
@@ -703,11 +740,31 @@ header.scrolled {
   border-radius: var(--border-radius);
   backdrop-filter: blur(10px);
   transition: 0s;
+  position: relative;
+  overflow: hidden;
 }
 
 .highlight:hover {
   transform: translateX(10px);
   border-color: var(--accent-primary);
+}
+
+.dynamic-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0, 212, 255, 0.18),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.dynamic-highlight:hover::before {
+  opacity: 1;
 }
 
 .highlight i {
@@ -1023,7 +1080,7 @@ header.scrolled {
 
 /* Skills Section */
 .skills {
-  background: var(--bg-primary);
+  background: rgba(10, 10, 10, 0.72);
   position: relative;
 }
 
@@ -1048,7 +1105,7 @@ header.scrolled {
 
 /* ── Section wrapper ──────────────────────────────────────── */
 .stats-section {
-  background: var(--bg-primary);
+  background: rgba(10, 10, 10, 0.74);
   position: relative;
   overflow: hidden;
 }
@@ -1415,7 +1472,7 @@ header.scrolled {
 
 /* Services Section */
 .services {
-  background: var(--bg-secondary);
+  background: rgba(17, 17, 17, 0.76);
   position: relative;
 }
 
@@ -1530,7 +1587,7 @@ header.scrolled {
 
 /* Projects Section */
 .projects {
-  background: var(--bg-primary);
+  background: rgba(10, 10, 10, 0.72);
   position: relative;
 }
 
@@ -1562,6 +1619,12 @@ header.scrolled {
   gap: 2.5rem;
 }
 
+.projects-grid-3d {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.2rem;
+  align-items: start;
+}
+
 .project-card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -1569,12 +1632,18 @@ header.scrolled {
   overflow: hidden;
   backdrop-filter: blur(10px);
   transition: var(--transition-smooth);
+  transform-style: preserve-3d;
 }
 
 .project-card:hover {
   transform: translateY(-10px);
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-hover);
+}
+
+.project-card-glass {
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .project-image {
@@ -1668,7 +1737,7 @@ header.scrolled {
 
 /* Contact Section */
 .contact {
-  background: var(--bg-secondary);
+  background: rgba(17, 17, 17, 0.78);
   position: relative;
 }
 
@@ -1711,11 +1780,33 @@ header.scrolled {
   border-radius: var(--border-radius);
   backdrop-filter: blur(10px);
   transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
 }
 
 .contact-item:hover {
   transform: translateX(10px);
   border-color: var(--accent-primary);
+}
+
+.dynamic-contact-item::before,
+.contact-form-3d::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    280px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0, 212, 255, 0.16),
+    transparent 58%
+  );
+  opacity: 0;
+  transition: opacity 0.28s;
+  pointer-events: none;
+}
+
+.dynamic-contact-item:hover::before,
+.contact-form-3d:hover::before {
+  opacity: 1;
 }
 
 .contact-icon {
@@ -1758,6 +1849,9 @@ header.scrolled {
   border-radius: var(--border-radius);
   padding: 2.5rem;
   backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
 }
 
 .form-group {
@@ -1961,19 +2055,45 @@ body.loaded {
 /* ─── App Root Wrapper ───────────────────────────────────────────────────────── */
 .app-wrapper {
   position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+
+.app-content-layer {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto;
 }
 
 /* ─── Mouse Glow Overlay ─────────────────────────────────────────────────────── */
 .glow-overlay {
   position: fixed;
   inset: 0;
-  pointer-events: none;
-  z-index: 9999;
+  pointer-events: none !important;
+  z-index: 2;
   mix-blend-mode: screen;
 }
-/* ── Carousel wrapper ───────────────────────────────────────── */
+
+.galaxy-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none !important;
+  opacity: 0.8;
+}
+
+.galaxy-bg * {
+  pointer-events: none !important;
+}
+
+.galaxy-bg canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+/* ── Legacy carousel wrappers (kept inert) ─────────────────── */
 .carousel-wrapper {
   position: relative;
+  display: none;
 }
 
 /* ── Arrow buttons ──────────────────────────────────────────── */
@@ -2030,8 +2150,8 @@ body.loaded {
 
 /* ── Individual project card ────────────────────────────────── */
 .project-card {
-  width: 340px;
-  flex-shrink: 0;
+  width: 100%;
+  flex-shrink: 1;
 }
 
 /* ── Disabled live-link state ───────────────────────────────── */
@@ -2075,17 +2195,14 @@ body.loaded {
 
 /* ── Mobile Responsive Carousel Adjustments ───────────────────── */
 .mobile-projects-grid {
-  display: none !important;
+  display: grid !important;
 }
 .mobile-projects-grid .project-card {
   width: 100%;
 }
 
 @media (max-width: 900px) {
-  .desktop-carousel {
-    display: none !important;
-  }
-  .mobile-projects-grid {
-    display: grid !important;
+  .projects-grid-3d {
+    grid-template-columns: 1fr;
   }
 }

@@ -13,6 +13,7 @@ import { useState, useEffect, useCallback } from "react";
 import Header from "./Components/Header";
 import Body from "./Components/Body";
 import Contact from "./Components/Contact";
+import GalaxyBackground from "./Components/GalaxyBackground";
 
 import { usePortfolioLogic } from "./usePortfolioLogic";
 
@@ -311,6 +312,8 @@ function App() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      <GalaxyBackground />
+
       {/* ── Radial glow overlay ──────────────────────────────────── */}
       <motion.div
         aria-hidden="true"
@@ -322,49 +325,51 @@ function App() {
       />
 
       {/* ── Page content ─────────────────────────────────────────── */}
-      <AnimatePresence>
-        {/* Header slides in from the top */}
-        <motion.div
-          key="header"
-          variants={headerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <Header
-            activeSection={activeSection}
-            isMenuOpen={isMenuOpen}
-            toggleMenu={toggleMenu}
-            closeMenu={closeMenu}
-            buttonAction={buttonAction}
-          />
-        </motion.div>
+      <div className="app-content-layer">
+        <AnimatePresence>
+          {/* Header slides in from the top */}
+          <motion.div
+            key="header"
+            variants={headerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <Header
+              activeSection={activeSection}
+              isMenuOpen={isMenuOpen}
+              toggleMenu={toggleMenu}
+              closeMenu={closeMenu}
+              buttonAction={buttonAction}
+            />
+          </motion.div>
 
-        {/* Body sections fade-up with a slight delay */}
-        <motion.div
-          key="body"
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.2 }}
-        >
-          <Body
-            typedText={typedText}
-            scrollReveal={scrollReveal}
-            buttonAction={buttonAction}
-          />
-        </motion.div>
+          {/* Body sections fade-up with a slight delay */}
+          <motion.div
+            key="body"
+            variants={sectionVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.2 }}
+          >
+            <Body
+              typedText={typedText}
+              scrollReveal={scrollReveal}
+              buttonAction={buttonAction}
+            />
+          </motion.div>
 
-        {/* Contact section fades up last */}
-        <motion.div
-          key="contact"
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.4 }}
-        >
-          <Contact scrollReveal={scrollReveal} />
-        </motion.div>
-      </AnimatePresence>
+          {/* Contact section fades up last */}
+          <motion.div
+            key="contact"
+            variants={sectionVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.4 }}
+          >
+            <Contact scrollReveal={scrollReveal} />
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,25 @@
 import { useEffect } from "react";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 import Moon from "../assets/Moon2.jpeg";
+
+const highlights = [
+  {
+    icon: "fas fa-graduation-cap",
+    title: "Education",
+    content: "Computer Science Engineering | RUET",
+  },
+  {
+    icon: "fas fa-map-marker-alt",
+    title: "Location",
+    content: "Kazla,Rajshahi,Bangladesh",
+  },
+  {
+    icon: "fas fa-briefcase",
+    title: "Currently Learning",
+    content: "MERN Stack, Data Science, Machine Learning",
+  },
+];
 
 /**
  * About
@@ -17,13 +37,31 @@ function About({ scrollReveal, buttonAction }) {
       return () => cleanups.forEach((c) => c && c());
     }
   }, [scrollReveal]);
+
+  const handleCardMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    card.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+
   return (
     <div>
       <section id="about" className="section about">
         <div className="container">
           <div className="about-content">
-            <div className="about-image">
-              <div className="image-wrapper">
+            <motion.div
+              className="about-image"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.6 }}
+            >
+              <motion.div
+                className="image-wrapper about-image-3d"
+                whileHover={{ rotateY: -5, rotateX: 5, scale: 1.01 }}
+                transition={{ duration: 0.35 }}
+              >
                 <img src={Moon} alt="About Asep" className="about-img" />
                 <div className="experience-badge">
                   <span className="badge-number">1+</span>
@@ -37,10 +75,10 @@ function About({ scrollReveal, buttonAction }) {
                   <i className="fas fa-rocket"></i>
                   <span>Hello👋🏻 !</span>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <div className="about-text">
+            <div className="about-text about-text-dynamic">
               <h2 className="section-title">About Me</h2>
               <div className="about-description">
                 <p>
@@ -80,27 +118,21 @@ function About({ scrollReveal, buttonAction }) {
               </div>
 
               <div className="about-highlights">
-                <div className="highlight">
-                  <i className="fas fa-graduation-cap"></i>
-                  <div>
-                    <h4>Education</h4>
-                    <p>Computer Science Engineering | RUET </p>
-                  </div>
-                </div>
-                <div className="highlight">
-                  <i className="fas fa-map-marker-alt"></i>
-                  <div>
-                    <h4>Location</h4>
-                    <p>Kazla,Rajshahi,Bangladesh</p>
-                  </div>
-                </div>
-                <div className="highlight">
-                  <i className="fas fa-briefcase"></i>
-                  <div>
-                    <h4>Currently Learning </h4>
-                    <p>MERN Stack, Data Science, Machine Learning</p>
-                  </div>
-                </div>
+                {highlights.map((item) => (
+                  <motion.div
+                    key={item.title}
+                    className="highlight dynamic-highlight"
+                    whileHover={{ y: -6, rotateX: 2 }}
+                    transition={{ type: "spring", stiffness: 220, damping: 20 }}
+                    onMouseMove={handleCardMouseMove}
+                  >
+                    <i className={item.icon}></i>
+                    <div>
+                      <h4>{item.title}</h4>
+                      <p>{item.content}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
 
               <div className="about-actions">

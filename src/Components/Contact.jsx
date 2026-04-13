@@ -1,9 +1,42 @@
 import { useRef, useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const SERVICE_ID = "service_mct6aw4";
 const TEMPLATE_ID = "template_046mmig";
 const PUBLIC_KEY = "bKL4kJw7SbywtDtGt";
+
+const contactsData = [
+  {
+    icon: "fas fa-envelope",
+    title: "Email",
+    value: "m.mmoon1527@gmail.com",
+    link: "mailto:m.mmoon1527@gmail.com",
+    action: "Send Email",
+  },
+  {
+    icon: "fas fa-phone",
+    title: "Phone",
+    value: "+880 18427-41365",
+    link: "tel:+8801842741365",
+    action: "Call Now",
+  },
+  {
+    icon: "fas fa-map-marker-alt",
+    title: "Location",
+    value: "Tikapara, Rajshahi, Bangladesh",
+    link: "https://maps.app.goo.gl/zBYm7x4pf2hXhb229",
+    action: "View on Map",
+  },
+  {
+    icon: "fab fa-whatsapp",
+    title: "WhatsApp",
+    value: "+880 018427-41365",
+    link: "https://wa.me/8801842741365",
+    action: "Send Message",
+  },
+];
 
 /**
  * Contact
@@ -23,6 +56,13 @@ function Contact({ scrollReveal }) {
       return () => cleanups.forEach((c) => c && c());
     }
   }, [scrollReveal]);
+
+  const handleCardMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    card.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,64 +86,39 @@ function Contact({ scrollReveal }) {
       <div className="container">
         <h2 className="section-title">Get In Touch</h2>
         <div className="contact-content">
-          {/* ── Contact Info (unchanged) ── */}
           <div className="contact-info">
-            <div className="contact-item">
-              <div className="contact-icon">
-                <i className="fas fa-envelope"></i>
-              </div>
-              <div className="contact-details">
-                <h3>Email</h3>
-                <p>m.mmoon1527@gmail.com</p>
-                <a href="mailto:m.mmoon1527@gmail.com">Send Email</a>
-              </div>
-            </div>
-            <div className="contact-item">
-              <div className="contact-icon">
-                <i className="fas fa-phone"></i>
-              </div>
-              <div className="contact-details">
-                <h3>Phone</h3>
-                <p>+880 18427-41365</p>
-                <a href="tel:+8801842741365">Call Now</a>
-              </div>
-            </div>
-            <div className="contact-item">
-              <div className="contact-icon">
-                <i className="fas fa-map-marker-alt"></i>
-              </div>
-              <div className="contact-details">
-                <h3>Location</h3>
-                <p>Tikapara, Rajshahi, Bangladesh</p>
-                <a
-                  href="https://maps.app.goo.gl/zBYm7x4pf2hXhb229"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View on Map
-                </a>
-              </div>
-            </div>
-            <div className="contact-item">
-              <div className="contact-icon">
-                <i className="fab fa-whatsapp"></i>
-              </div>
-              <div className="contact-details">
-                <h3>WhatsApp</h3>
-                <p>+880 018427-41365</p>
-                <a
-                  href="https://wa.me/8801842741365"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Send Message
-                </a>
-              </div>
-            </div>
+            {contactsData.map((item) => (
+              <motion.div
+                key={item.title}
+                className="contact-item dynamic-contact-item"
+                whileHover={{ y: -8, rotateX: 2, rotateY: -2 }}
+                transition={{ type: "spring", stiffness: 220, damping: 20 }}
+                onMouseMove={handleCardMouseMove}
+              >
+                <div className="contact-icon">
+                  <i className={item.icon}></i>
+                </div>
+                <div className="contact-details">
+                  <h3>{item.title}</h3>
+                  <p>{item.value}</p>
+                  <a
+                    href={item.link}
+                    target={item.link.startsWith("http") ? "_blank" : undefined}
+                    rel={item.link.startsWith("http") ? "noreferrer" : undefined}
+                  >
+                    {item.action}
+                  </a>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
-          {/* Contact Form  */}
-          <div className="contact-form">
+          <motion.div
+            className="contact-form contact-form-3d"
+            whileHover={{ rotateX: 2, rotateY: -2 }}
+            transition={{ duration: 0.35 }}
+            onMouseMove={handleCardMouseMove}
+          >
             <form ref={formRef} onSubmit={handleSubmit}>
               <div className="form-group">
                 <input type="text" name="from_name" id="name" required />
@@ -149,7 +164,7 @@ function Contact({ scrollReveal }) {
                 ></i>
               </button>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

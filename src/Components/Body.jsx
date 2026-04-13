@@ -12,7 +12,7 @@ import Projects from "./Projects";
  */
 function Body({ typedText, scrollReveal, buttonAction }) {
   return (
-    <div>
+    <div className="body-3d-space">
       <ProfileCard
         typedText={typedText}
         scrollReveal={scrollReveal}
