@@ -24,6 +24,8 @@
   --transition-spring: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
+  --glow-primary-rgb: 0, 212, 255;
+  --glow-secondary-rgb: 0, 153, 204;
 }
 
 * {
@@ -2205,6 +2207,20 @@ body.loaded {
   position: relative;
   z-index: 5;
   pointer-events: auto;
+}
+
+.palette-below-header {
+  position: fixed;
+  top: 78px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+}
+
+@media (max-width: 768px) {
+  .palette-below-header {
+    top: 72px;
+  }
 }
 
 /* ─── Mouse Glow Overlay ─────────────────────────────────────────────────────── */

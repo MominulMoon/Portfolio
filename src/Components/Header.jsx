@@ -11,6 +11,7 @@ function Header({
   toggleMenu,
   closeMenu,
   buttonAction,
+  onHeaderHoverChange,
 }) {
   const navItems = [
     { id: "#home", label: "Home" },
@@ -23,7 +24,10 @@ function Header({
   ];
 
   return (
-    <header>
+    <header
+      onMouseEnter={() => onHeaderHoverChange?.(true)}
+      onMouseLeave={() => onHeaderHoverChange?.(false)}
+    >
       <nav className="navbar">
         <div className="nav-brand">
           Portfolio<span className="brand-dot">.</span>

@@ -66,6 +66,7 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
       return () => cleanups.forEach((c) => c && c());
     }
   }, [scrollReveal]);
+
   return (
     <div>
       <section id="home" className="section home">

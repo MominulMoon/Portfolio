@@ -11,9 +11,11 @@ import {
 import { useState, useEffect, useCallback } from "react";
 
 import Header from "./Components/Header";
+import ThemePaletteBar from "./Components/ThemePaletteBar";
 import Body from "./Components/Body";
 import Contact from "./Components/Contact";
 import GalaxyBackground from "./Components/GalaxyBackground";
+import { applyThemePalette } from "./themePalettes";
 
 import { usePortfolioLogic } from "./usePortfolioLogic";
 
@@ -28,11 +30,11 @@ function useTypewriter() {
 
   useEffect(() => {
     const words = [
-      "Full-Stack Developer",
-      "Frontend Engineer",
-      "Backend Developer",
-      "Problem Solver",
-      "Data Scientist",
+      "Full-Stack Development",
+      "Frontend Development",
+      "Backend Development",
+      "Problem Solving",
+      "Data Science",
     ];
 
     let wordIndex = 0;
@@ -46,7 +48,7 @@ function useTypewriter() {
         ? word.slice(0, charIndex - 1)
         : word.slice(0, charIndex + 1);
 
-      setDisplayedText(`I'm a ${displayed}`);
+      setDisplayedText(`I'm learning ${displayed}`);
 
       // Advance or retreat the character pointer
       if (deleting) charIndex--;
@@ -273,6 +275,9 @@ function App() {
   const activeSection = useActiveNav();
   // Manage mobile hamburger menu state
   const { isMenuOpen, toggleMenu, closeMenu } = useMobileMenu();
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [isHeaderHovered, setIsHeaderHovered] = useState(false);
+  const [showPaletteBar, setShowPaletteBar] = useState(false);
   const scrollReveal = useScrollReveal();
   const buttonAction = useButtonActions();
 
@@ -286,8 +291,8 @@ function App() {
     [mouseX, mouseY],
     ([x, y]) =>
       `radial-gradient(600px circle at ${x}px ${y}px,
-        rgba(113, 72, 250, 0.18) 0%,
-        rgba(80, 160, 255, 0.10) 27%,
+        rgba(var(--glow-primary-rgb, 0, 212, 255), 0.22) 0%,
+        rgba(var(--glow-secondary-rgb, 0, 153, 204), 0.11) 28%,
         transparent 80%)`,
   );
 
@@ -303,6 +308,30 @@ function App() {
 
   const handleMouseLeave = () =>
     animate(glowOpacity, 0, { duration: 0.6, ease: "easeIn" });
+
+  useEffect(() => {
+    applyThemePalette("current");
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setIsAtTop(window.scrollY < 80);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    let hideTimer;
+    if (isAtTop && isHeaderHovered) {
+      setShowPaletteBar(true);
+    } else {
+      const hideDelay = isAtTop ? 3000 : 500;
+      hideTimer = setTimeout(() => setShowPaletteBar(false), hideDelay);
+    }
+    return () => clearTimeout(hideTimer);
+  }, [isAtTop, isHeaderHovered]);
 
   return (
     // Outer wrapper that captures mouse position
@@ -340,7 +369,22 @@ function App() {
               toggleMenu={toggleMenu}
               closeMenu={closeMenu}
               buttonAction={buttonAction}
+              onHeaderHoverChange={setIsHeaderHovered}
             />
+          </motion.div>
+
+          <motion.div
+            key="theme-palette"
+            className="palette-below-header"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{
+              opacity: showPaletteBar ? 1 : 0,
+              y: showPaletteBar ? 0 : -12,
+            }}
+            transition={{ duration: 0.35, delay: 0.12 }}
+            style={{ pointerEvents: showPaletteBar ? "auto" : "none" }}
+          >
+            <ThemePaletteBar />
           </motion.div>
 
           {/* Body sections fade-up with a slight delay */}
