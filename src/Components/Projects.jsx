@@ -129,7 +129,7 @@ function Toast({ message, onDone }) {
   );
 }
 
-function ProjectCard({ project, onLiveClick }) {
+function ProjectCard({ project, onLiveClick, onOpen }) {
   const cardRef = useRef(null);
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
@@ -159,7 +159,7 @@ function ProjectCard({ project, onLiveClick }) {
   return (
     <motion.div
       ref={cardRef}
-      className="project-card group relative"
+      className="project-card project-card-3d group relative"
       style={{
         rotateX,
         rotateY,
@@ -175,8 +175,13 @@ function ProjectCard({ project, onLiveClick }) {
         rotateZ: 0.5,
         transition: { duration: 0.2 },
       }}
+      onClick={() => {
+        const rect = cardRef.current?.getBoundingClientRect();
+        onOpen(project, rect);
+      }}
     >
       <motion.div className="project-card-glass" style={{ rotateX: scrollRotateX }}>
+        <div className="project-card-shine" />
         <div className="project-image">
           <img src={project.image} alt={project.alt} draggable="false" />
           <div className="project-overlay">
@@ -224,7 +229,11 @@ function ProjectCard({ project, onLiveClick }) {
  * Triggers Framer layout animations when filtering and scrollReveal when entering the viewport.
  */
 function Projects({ scrollReveal }) {
+  const sectionRef = useRef(null);
   const [toast, setToast] = useState(null);
+  const [activeProject, setActiveProject] = useState(null);
+  const [originRect, setOriginRect] = useState(null);
+  const [targetRect, setTargetRect] = useState(null);
 
   useEffect(() => {
     if (scrollReveal) {
@@ -232,6 +241,72 @@ function Projects({ scrollReveal }) {
       return () => cleanup && cleanup();
     }
   }, [scrollReveal]);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        handleCloseProject();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const handleOpenProject = (project, rect) => {
+    const sectionRect = sectionRef.current?.getBoundingClientRect();
+    if (rect && sectionRect) {
+      const nextOrigin = {
+        top: rect.top - sectionRect.top,
+        left: rect.left - sectionRect.left,
+        width: rect.width,
+        height: rect.height,
+      };
+      const margin = 12;
+      const preferredWidth = Math.min(
+        Math.max(rect.width * 1.7, 560),
+        sectionRect.width * 0.82,
+      );
+      const preferredHeight = Math.min(
+        Math.max(rect.height * 1.9, 520),
+        window.innerHeight * 0.78,
+      );
+      const maxWidth = Math.min(preferredWidth, sectionRect.width - margin * 2);
+      const maxHeight = Math.min(
+        preferredHeight,
+        Math.max(360, window.innerHeight - margin * 2),
+      );
+      const centerX = sectionRect.width / 2;
+      const centerY = nextOrigin.top + rect.height / 2;
+      const clampedLeft = Math.max(
+        margin,
+        Math.min(centerX - maxWidth / 2, sectionRect.width - maxWidth - margin),
+      );
+      const clampedTop = Math.max(
+        margin,
+        Math.min(
+          centerY - maxHeight / 2,
+          Math.max(margin, sectionRect.height - maxHeight - margin),
+        ),
+      );
+
+      setOriginRect(nextOrigin);
+      setTargetRect({
+        top: clampedTop,
+        left: clampedLeft,
+        width: maxWidth,
+        height: maxHeight,
+      });
+    }
+    setActiveProject(project);
+  };
+
+  const handleCloseProject = () => {
+    setActiveProject(null);
+    setTimeout(() => {
+      setOriginRect(null);
+      setTargetRect(null);
+    }, 260);
+  };
 
   const handleLiveClick = (e, liveLink, title) => {
     e.stopPropagation();
@@ -246,7 +321,7 @@ function Projects({ scrollReveal }) {
   };
 
   return (
-    <section id="project" className="section projects">
+    <section id="project" ref={sectionRef} className="section projects">
       <div className="container perspective-[1200px]">
         <h2 className="section-title">Featured Projects</h2>
 
@@ -256,10 +331,129 @@ function Projects({ scrollReveal }) {
               key={project.id}
               project={project}
               onLiveClick={handleLiveClick}
+              onOpen={handleOpenProject}
             />
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {activeProject && (
+          <motion.div
+            className="project-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleCloseProject}
+          >
+            {originRect && (
+              <motion.div
+                className="project-origin-pulse"
+                initial={{
+                  opacity: 0.55,
+                  top: originRect.top,
+                  left: originRect.left,
+                  width: originRect.width,
+                  height: originRect.height,
+                  scale: 0.95,
+                }}
+                animate={{ opacity: 0, scale: 1.18 }}
+                transition={{ duration: 0.32, ease: "easeOut" }}
+              />
+            )}
+
+            <motion.div
+              className="project-modal-card"
+              initial={
+                originRect
+                  ? {
+                      opacity: 0.45,
+                      top: originRect.top,
+                      left: originRect.left,
+                      width: originRect.width,
+                      height: originRect.height,
+                      x: 0,
+                      y: 0,
+                      borderRadius: 16,
+                    }
+                  : { opacity: 0, scale: 0.96 }
+              }
+              animate={{
+                opacity: 1,
+                top: targetRect?.top ?? 12,
+                left: targetRect?.left ?? 12,
+                width: targetRect?.width ?? "calc(100vw - 24px)",
+                height: targetRect?.height ?? 520,
+                x: 0,
+                y: 0,
+                borderRadius: 20,
+              }}
+              exit={
+                originRect
+                  ? {
+                      opacity: 0.4,
+                      top: originRect.top,
+                      left: originRect.left,
+                      width: originRect.width,
+                      height: originRect.height,
+                      x: 0,
+                      y: 0,
+                      borderRadius: 16,
+                    }
+                  : { opacity: 0, scale: 0.96 }
+              }
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="project-modal-close"
+                aria-label="Close project details"
+                onClick={handleCloseProject}
+              >
+                ×
+              </button>
+
+              <div className="project-modal-media">
+                <img src={activeProject.image} alt={activeProject.alt} />
+              </div>
+
+              <div className="project-modal-body">
+                <h3>{activeProject.title}</h3>
+                <p>{activeProject.description}</p>
+
+                <div className="project-tech">
+                  {activeProject.tech.map((t, i) => (
+                    <span key={i}>{t}</span>
+                  ))}
+                </div>
+
+                <div className="project-modal-links">
+                  <a
+                    href={activeProject.liveLink || "#"}
+                    className={`project-link ${!activeProject.liveLink ? "project-link--disabled" : ""}`}
+                    rel="noreferrer"
+                    onClick={(e) =>
+                      handleLiveClick(e, activeProject.liveLink, activeProject.title)
+                    }
+                  >
+                    <i className="fas fa-external-link-alt"></i>
+                    <span>Live Demo</span>
+                  </a>
+                  <a
+                    href={activeProject.githubLink}
+                    className="project-link"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <i className="fab fa-github"></i>
+                    <span>GitHub</span>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Toast message={toast} onDone={() => setToast(null)} />
     </section>

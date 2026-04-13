@@ -1635,6 +1635,26 @@ header.scrolled {
   transform-style: preserve-3d;
 }
 
+.project-card-3d {
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.project-card-3d::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.project-card-3d:hover::before {
+  opacity: 1;
+}
+
 .project-card:hover {
   transform: translateY(-10px);
   border-color: var(--accent-primary);
@@ -1644,6 +1664,26 @@ header.scrolled {
 .project-card-glass {
   transform-style: preserve-3d;
   will-change: transform;
+  position: relative;
+}
+
+.project-card-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.16) 40%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.project-card:hover .project-card-shine {
+  transform: translateX(140%);
 }
 
 .project-image {
@@ -1733,6 +1773,90 @@ header.scrolled {
   border-radius: 15px;
   font-size: 0.8rem;
   font-weight: 500;
+}
+
+.project-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.58);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.project-origin-pulse {
+  position: absolute;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 212, 255, 0.6);
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 212, 255, 0.2) 0%,
+    rgba(0, 212, 255, 0.06) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.project-modal-card {
+  position: absolute;
+  overflow: hidden;
+  background: rgba(14, 14, 14, 0.92);
+  border: 1px solid rgba(0, 212, 255, 0.28);
+  border-radius: 20px;
+  box-shadow: 0 24px 85px rgba(0, 0, 0, 0.48);
+  transform-origin: top left;
+}
+
+.project-modal-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.8rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.project-modal-media img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 20px 20px 0 0;
+}
+
+.project-modal-body {
+  padding: 1.5rem;
+}
+
+.project-modal-body h3 {
+  font-size: 1.7rem;
+  margin-bottom: 0.8rem;
+}
+
+.project-modal-body p {
+  color: var(--text-secondary);
+  margin-bottom: 1.2rem;
+}
+
+.project-modal-links {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.project-modal-links .project-link {
+  width: auto;
+  height: auto;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  gap: 0.45rem;
 }
 
 /* Contact Section */
