@@ -57,7 +57,9 @@ export const paletteDots = [
 ];
 
 export function applyThemePalette(paletteId) {
-  const safePaletteId = colorPalettes[paletteId] ? paletteId : DEFAULT_PALETTE_ID;
+  const safePaletteId = colorPalettes[paletteId]
+    ? paletteId
+    : DEFAULT_PALETTE_ID;
   const palette = colorPalettes[safePaletteId];
   const root = document.documentElement;
   root.style.setProperty("--accent-primary", palette.accentPrimary);
@@ -68,6 +70,13 @@ export function applyThemePalette(paletteId) {
   root.style.setProperty("--glow-primary-rgb", palette.glowPrimaryRgb);
   root.style.setProperty("--glow-secondary-rgb", palette.glowSecondaryRgb);
   localStorage.setItem("portfolio-theme", safePaletteId);
+
+  // Dispatch custom event for theme change
+  window.dispatchEvent(
+    new CustomEvent("themeChange", {
+      detail: { paletteId: safePaletteId, palette },
+    }),
+  );
 }
 
 export function getStoredThemeId() {

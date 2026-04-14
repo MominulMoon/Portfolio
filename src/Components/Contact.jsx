@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
-function RetroOrb() {
+function RetroOrb({ color }) {
   const meshRef = useRef(null);
 
   useFrame((_, delta) => {
@@ -17,7 +17,7 @@ function RetroOrb() {
   return (
     <mesh ref={meshRef}>
       <torusKnotGeometry args={[0.9, 0.22, 120, 18]} />
-      <meshStandardMaterial color="#00d4ff" wireframe />
+      <meshStandardMaterial color={color} wireframe />
     </mesh>
   );
 }
@@ -65,6 +65,12 @@ const contactsData = [
 function Contact({ scrollReveal }) {
   const formRef = useRef(null);
   const [status, setStatus] = useState("idle"); // "idle" | "sending" | "success" | "error"
+  const [accentColor, setAccentColor] = useState(
+    () =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--accent-primary")
+        .trim() || "#00d4ff",
+  );
 
   useEffect(() => {
     if (scrollReveal) {
@@ -75,6 +81,17 @@ function Contact({ scrollReveal }) {
       return () => cleanups.forEach((c) => c && c());
     }
   }, [scrollReveal]);
+
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const palette = event.detail?.palette;
+      if (!palette) return;
+      setAccentColor(palette.accentPrimary);
+    };
+
+    window.addEventListener("themeChange", handleThemeChange);
+    return () => window.removeEventListener("themeChange", handleThemeChange);
+  }, []);
 
   const handleCardMouseMove = (e) => {
     const card = e.currentTarget;
@@ -112,11 +129,20 @@ function Contact({ scrollReveal }) {
       <div className="container relative z-10">
         <h2 className="section-title">Get In Touch</h2>
 
-        <div className="relative mb-8 h-40 w-full overflow-hidden rounded-2xl border border-cyan-400/30 bg-black/35">
+        <div
+          className="relative mb-8 h-40 w-full overflow-hidden rounded-2xl bg-black/35"
+          style={{
+            border: `1px solid ${accentColor}30`,
+          }}
+        >
           <Canvas camera={{ position: [0, 0, 3.6], fov: 50 }}>
             <ambientLight intensity={0.3} />
-            <pointLight position={[2, 2, 3]} intensity={1.4} color="#00d4ff" />
-            <RetroOrb />
+            <pointLight
+              position={[2, 2, 3]}
+              intensity={1.4}
+              color={accentColor}
+            />
+            <RetroOrb color={accentColor} />
             <OrbitControls
               enableZoom={false}
               enablePan={false}
@@ -124,7 +150,12 @@ function Contact({ scrollReveal }) {
               autoRotateSpeed={0.9}
             />
           </Canvas>
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/10 to-transparent" />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage: `linear-gradient(to right, transparent, ${accentColor}10, transparent)`,
+            }}
+          />
         </div>
 
         <div className="contact-content">
@@ -132,16 +163,30 @@ function Contact({ scrollReveal }) {
             {contactsData.map((item) => (
               <motion.div
                 key={item.title}
-                className="contact-item dynamic-contact-item border-cyan-400/35 bg-black/45 shadow-[0_0_24px_rgba(0,212,255,0.17)] backdrop-blur-md"
+                className="contact-item dynamic-contact-item bg-black/45 backdrop-blur-md"
                 whileHover={{ y: -8, rotateX: 2, rotateY: -2, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 220, damping: 20 }}
                 onMouseMove={handleCardMouseMove}
+                style={{
+                  border: `1px solid ${accentColor}59`,
+                  boxShadow: `0 0 24px ${accentColor}2c`,
+                }}
               >
-                <div className="contact-icon !bg-transparent border border-cyan-300/60 text-cyan-300 shadow-[0_0_20px_rgba(0,212,255,0.25)]">
+                <div
+                  className="contact-icon !bg-transparent"
+                  style={{
+                    border: `2px solid ${accentColor}99`,
+                    color: accentColor,
+                    boxShadow: `0 0 20px ${accentColor}40`,
+                  }}
+                >
                   <i className={item.icon}></i>
                 </div>
                 <div className="contact-details">
-                  <h3 className="font-mono uppercase tracking-[0.18em] text-cyan-200">
+                  <h3
+                    className="font-mono uppercase tracking-[0.18em]"
+                    style={{ color: accentColor }}
+                  >
                     {item.title}
                   </h3>
                   <p className="text-slate-300">{item.value}</p>
@@ -151,7 +196,8 @@ function Contact({ scrollReveal }) {
                     rel={
                       item.link.startsWith("http") ? "noreferrer" : undefined
                     }
-                    className="inline-block font-mono text-xs uppercase tracking-[0.16em] text-cyan-300 hover:text-cyan-200"
+                    className="inline-block font-mono text-xs uppercase tracking-[0.16em] transition hover:opacity-80"
+                    style={{ color: accentColor }}
                   >
                     {item.action}
                   </a>
@@ -161,12 +207,20 @@ function Contact({ scrollReveal }) {
           </div>
 
           <motion.div
-            className="contact-form contact-form-3d border border-cyan-400/30 bg-black/50 shadow-[0_0_32px_rgba(0,212,255,0.13)] backdrop-blur-md"
+            className="contact-form contact-form-3d bg-black/50 backdrop-blur-md"
             whileHover={{ rotateX: 2, rotateY: -2 }}
             transition={{ duration: 0.35 }}
             onMouseMove={handleCardMouseMove}
+            style={{
+              border: `1px solid ${accentColor}4d`,
+              boxShadow: `0 0 32px ${accentColor}21`,
+            }}
           >
-            <form ref={formRef} onSubmit={handleSubmit} aria-label="Contact form">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              aria-label="Contact form"
+            >
               <div className="form-group">
                 <input
                   type="text"

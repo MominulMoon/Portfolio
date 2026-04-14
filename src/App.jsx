@@ -15,7 +15,12 @@ import ThemePaletteBar from "./Components/ThemePaletteBar";
 import Body from "./Components/Body";
 import Contact from "./Components/Contact";
 import GalaxyBackground from "./Components/GalaxyBackground";
-import { applyThemePalette, DEFAULT_PALETTE_ID } from "./themePalettes";
+import {
+  applyThemePalette,
+  colorPalettes,
+  DEFAULT_PALETTE_ID,
+  getStoredThemeId,
+} from "./themePalettes";
 
 import { usePortfolioLogic } from "./usePortfolioLogic";
 
@@ -282,6 +287,7 @@ function App() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isHeaderHovered, setIsHeaderHovered] = useState(false);
   const [showPaletteBar, setShowPaletteBar] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const scrollReveal = useScrollReveal();
   const buttonAction = useButtonActions();
 
@@ -290,13 +296,20 @@ function App() {
   const mouseY = useMotionValue(-500);
   // Track the fade-in opacity of the mouse glow
   const glowOpacity = useMotionValue(0);
-  // Dynamically map X/Y coordinates into a CSS radial gradient string
+  const glowPrimaryRgb = useMotionValue(
+    colorPalettes[getStoredThemeId()]?.glowPrimaryRgb ?? "0, 212, 255",
+  );
+  const glowSecondaryRgb = useMotionValue(
+    colorPalettes[getStoredThemeId()]?.glowSecondaryRgb ?? "0, 153, 204",
+  );
+
+  // Dynamically map X/Y coordinates into a radial gradient string
   const glowBackground = useTransform(
-    [mouseX, mouseY],
-    ([x, y]) =>
+    [mouseX, mouseY, glowPrimaryRgb, glowSecondaryRgb],
+    ([x, y, primary, secondary]) =>
       `radial-gradient(600px circle at ${x}px ${y}px,
-        rgba(var(--glow-primary-rgb, 0, 212, 255), 0.22) 0%,
-        rgba(var(--glow-secondary-rgb, 0, 153, 204), 0.11) 28%,
+        rgba(${primary}, 0.22) 0%,
+        rgba(${secondary}, 0.11) 28%,
         transparent 80%)`,
   );
 
@@ -314,7 +327,31 @@ function App() {
     animate(glowOpacity, 0, { duration: 0.6, ease: "easeIn" });
 
   useEffect(() => {
-    applyThemePalette(DEFAULT_PALETTE_ID);
+    const savedTheme = getStoredThemeId();
+    applyThemePalette(savedTheme);
+    glowPrimaryRgb.set(
+      colorPalettes[savedTheme]?.glowPrimaryRgb ?? "0, 212, 255",
+    );
+    glowSecondaryRgb.set(
+      colorPalettes[savedTheme]?.glowSecondaryRgb ?? "0, 153, 204",
+    );
+  }, []);
+
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const palette = event.detail?.palette;
+      if (!palette) return;
+      glowPrimaryRgb.set(palette.glowPrimaryRgb);
+      glowSecondaryRgb.set(palette.glowSecondaryRgb);
+    };
+
+    window.addEventListener("themeChange", handleThemeChange);
+    return () => window.removeEventListener("themeChange", handleThemeChange);
+  }, [glowPrimaryRgb, glowSecondaryRgb]);
+
+  useEffect(() => {
+    const loaderTimer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(loaderTimer);
   }, []);
 
   useEffect(() => {
@@ -331,7 +368,9 @@ function App() {
     if (isAtTop && isHeaderHovered) {
       timer = setTimeout(() => setShowPaletteBar(true), 0);
     } else {
-      const hideDelay = isAtTop ? PALETTE_HIDE_DELAY_TOP : PALETTE_HIDE_DELAY_SCROLLED;
+      const hideDelay = isAtTop
+        ? PALETTE_HIDE_DELAY_TOP
+        : PALETTE_HIDE_DELAY_SCROLLED;
       timer = setTimeout(() => setShowPaletteBar(false), hideDelay);
     }
     return () => clearTimeout(timer);
@@ -359,63 +398,81 @@ function App() {
 
       {/* ── Page content ─────────────────────────────────────────── */}
       <div className="app-content-layer">
-        <AnimatePresence>
-          {/* Header slides in from the top */}
-          <motion.div
-            key="header"
-            variants={headerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <Header
-              activeSection={activeSection}
-              isMenuOpen={isMenuOpen}
-              toggleMenu={toggleMenu}
-              closeMenu={closeMenu}
-              buttonAction={buttonAction}
-              onHeaderHoverChange={setIsHeaderHovered}
-            />
-          </motion.div>
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <motion.div
+              key="loader"
+              className="loading-screen"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="loading-card">
+                <div className="loader-ring" />
+                <p className="loading-copy">Preparing the portfolio...</p>
+              </div>
+            </motion.div>
+          ) : (
+            <>
+              {/* Header slides in from the top */}
+              <motion.div
+                key="header"
+                variants={headerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <Header
+                  activeSection={activeSection}
+                  isMenuOpen={isMenuOpen}
+                  toggleMenu={toggleMenu}
+                  closeMenu={closeMenu}
+                  buttonAction={buttonAction}
+                  onHeaderHoverChange={setIsHeaderHovered}
+                />
+              </motion.div>
 
-          <motion.div
-            key="theme-palette"
-            className="palette-below-header"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{
-              opacity: showPaletteBar ? 1 : 0,
-              y: showPaletteBar ? 0 : -12,
-            }}
-            transition={{ duration: 0.35, delay: 0.12 }}
-            style={{ pointerEvents: showPaletteBar ? "auto" : "none" }}
-          >
-            <ThemePaletteBar />
-          </motion.div>
+              <motion.div
+                key="theme-palette"
+                className="palette-below-header"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{
+                  opacity: showPaletteBar ? 1 : 0,
+                  y: showPaletteBar ? 0 : -12,
+                }}
+                transition={{ duration: 0.35, delay: 0.12 }}
+                style={{ pointerEvents: showPaletteBar ? "auto" : "none" }}
+              >
+                <ThemePaletteBar />
+              </motion.div>
 
-          {/* Body sections fade-up with a slight delay */}
-          <motion.div
-            key="body"
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.2 }}
-          >
-            <Body
-              typedText={typedText}
-              scrollReveal={scrollReveal}
-              buttonAction={buttonAction}
-            />
-          </motion.div>
+              {/* Body sections fade-up with a slight delay */}
+              <motion.div
+                key="body"
+                variants={sectionVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.2 }}
+              >
+                <Body
+                  typedText={typedText}
+                  scrollReveal={scrollReveal}
+                  buttonAction={buttonAction}
+                />
+              </motion.div>
 
-          {/* Contact section fades up last */}
-          <motion.div
-            key="contact"
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.4 }}
-          >
-            <Contact scrollReveal={scrollReveal} />
-          </motion.div>
+              {/* Contact section fades up last */}
+              <motion.div
+                key="contact"
+                variants={sectionVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.4 }}
+              >
+                <Contact scrollReveal={scrollReveal} />
+              </motion.div>
+            </>
+          )}
         </AnimatePresence>
       </div>
     </div>

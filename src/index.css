@@ -49,6 +49,49 @@ body {
   z-index: 0;
 }
 
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.98);
+}
+
+.loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 2.5rem;
+  border-radius: 24px;
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+.loader-ring {
+  width: 72px;
+  height: 72px;
+  border: 7px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: loader-spin 0.9s linear infinite;
+}
+
+.loading-copy {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -197,7 +240,7 @@ header.scrolled {
 
 .cta-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(var(--glow-primary-rgb), 0.3);
 }
 
 .hamburger {
@@ -249,7 +292,11 @@ header.scrolled {
   inset: 8% 6%;
   border-radius: 24px;
   background:
-    radial-gradient(circle at 20% 25%, rgba(0, 212, 255, 0.12), transparent 38%),
+    radial-gradient(
+      circle at 20% 25%,
+      rgba(0, 212, 255, 0.12),
+      transparent 38%
+    ),
     radial-gradient(circle at 82% 75%, rgba(120, 90, 255, 0.1), transparent 42%);
   filter: blur(45px);
   transform: translateZ(-60px) scale(1.06);
@@ -472,7 +519,7 @@ header.scrolled {
 
 .hire-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 15px 35px rgba(var(--glow-primary-rgb), 0.3);
 }
 
 .hire-btn.secondary:hover {
@@ -823,7 +870,7 @@ header.scrolled {
   background: var(--accent-primary);
   color: var(--bg-primary);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(var(--glow-primary-rgb), 0.3);
 }
 
 .about-expand-backdrop {
@@ -1953,7 +2000,7 @@ header.scrolled {
   height: 100%;
   background: linear-gradient(
     135deg,
-    rgba(0, 212, 255, 0.02) 0%,
+    rgba(var(--glow-primary-rgb), 0.02) 0%,
     transparent 50%
   );
   pointer-events: none;
@@ -1999,7 +2046,7 @@ header.scrolled {
   inset: 0;
   background: radial-gradient(
     280px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(0, 212, 255, 0.16),
+    rgba(var(--glow-primary-rgb), 0.16),
     transparent 58%
   );
   opacity: 0;
@@ -2078,7 +2125,7 @@ header.scrolled {
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--glow-primary-rgb), 0.1);
 }
 
 .form-group label {
@@ -2121,7 +2168,7 @@ header.scrolled {
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(var(--glow-primary-rgb), 0.3);
 }
 
 /* Responsive Updates */

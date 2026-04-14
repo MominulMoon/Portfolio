@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { colorPalettes, getStoredThemeId } from "../themePalettes";
 
 // Codeforces and GitHub handles
 const CF_HANDLE = "Mominul_Moon";
@@ -202,9 +203,24 @@ export default function Stats() {
   const [gh, setGh] = useState(null);
   const [cfErr, setCfErr] = useState(false);
   const [ghErr, setGhErr] = useState(false);
+  const [heatmapColor, setHeatmapColor] = useState(() => {
+    const themeId = getStoredThemeId();
+    return colorPalettes[themeId]?.accentPrimary.replace("#", "") || "00d4ff";
+  });
 
   const headerRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true });
+
+  // Listen for theme changes
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const { palette } = event.detail;
+      setHeatmapColor(palette.accentPrimary.replace("#", ""));
+    };
+
+    window.addEventListener("themeChange", handleThemeChange);
+    return () => window.removeEventListener("themeChange", handleThemeChange);
+  }, []);
 
   // Fetch Codeforces user info and rating history in parallel
   useEffect(() => {
@@ -423,7 +439,7 @@ export default function Stats() {
                   transition={{ delay: 0.2, duration: 0.5 }}
                 >
                   <img
-                    src={`https://ghchart.rshah.org/00d4ff/${GH_HANDLE}`}
+                    src={`https://ghchart.rshah.org/${heatmapColor}/${GH_HANDLE}`}
                     alt="GitHub contribution chart"
                     className="gh-chart"
                   />

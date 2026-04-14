@@ -58,8 +58,16 @@ function About({ scrollReveal, buttonAction }) {
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   // Spring smoothing keeps the tilt stable and avoids sudden jitter.
-  const smoothRotateX = useSpring(rotateX, { stiffness: 300, damping: 30, mass: 0.45 });
-  const smoothRotateY = useSpring(rotateY, { stiffness: 300, damping: 30, mass: 0.45 });
+  const smoothRotateX = useSpring(rotateX, {
+    stiffness: 300,
+    damping: 30,
+    mass: 0.45,
+  });
+  const smoothRotateY = useSpring(rotateY, {
+    stiffness: 300,
+    damping: 30,
+    mass: 0.45,
+  });
 
   useEffect(() => {
     if (scrollReveal) {
@@ -239,13 +247,19 @@ function About({ scrollReveal, buttonAction }) {
                     transition={{ type: "spring", stiffness: 220, damping: 20 }}
                     onMouseMove={handleCardMouseMove}
                     onClick={(e) =>
-                      handleOpenHighlight(item, e.currentTarget.getBoundingClientRect())
+                      handleOpenHighlight(
+                        item,
+                        e.currentTarget.getBoundingClientRect(),
+                      )
                     }
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) =>
                       (e.key === "Enter" || e.key === " ") &&
-                      handleOpenHighlight(item, e.currentTarget.getBoundingClientRect())
+                      handleOpenHighlight(
+                        item,
+                        e.currentTarget.getBoundingClientRect(),
+                      )
                     }
                   >
                     <i className={item.icon}></i>

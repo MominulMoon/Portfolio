@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
 const GALAXY_CONFIG = {
@@ -11,7 +11,7 @@ const GALAXY_CONFIG = {
   speed: 0.55,
 };
 
-function GalaxyField() {
+function GalaxyField({ accentColor }) {
   const groupRef = useRef(null);
 
   useFrame((_, delta) => {
@@ -34,7 +34,7 @@ function GalaxyField() {
       <mesh position={[0, 0, -30]}>
         <sphereGeometry args={[32, 48, 48]} />
         <meshBasicMaterial
-          color={new THREE.Color("#00d4ff")}
+          color={new THREE.Color(accentColor)}
           wireframe
           transparent
           opacity={0.04}
@@ -45,11 +45,29 @@ function GalaxyField() {
 }
 
 function GalaxyBackground() {
+  const [accentColor, setAccentColor] = useState(
+    () =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--accent-primary")
+        .trim() || "#00d4ff",
+  );
+
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const palette = event.detail?.palette;
+      if (!palette) return;
+      setAccentColor(palette.accentPrimary);
+    };
+
+    window.addEventListener("themeChange", handleThemeChange);
+    return () => window.removeEventListener("themeChange", handleThemeChange);
+  }, []);
+
   return (
     <div className="galaxy-bg" aria-hidden="true">
       <Canvas camera={{ position: [0, 0, 35], fov: 60 }}>
         <ambientLight intensity={0.7} />
-        <GalaxyField />
+        <GalaxyField accentColor={accentColor} />
       </Canvas>
     </div>
   );
