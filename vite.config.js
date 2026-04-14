@@ -10,4 +10,32 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Split vendor libraries into separate chunks
+          if (id.includes("node_modules/react")) {
+            return "vendor-react";
+          }
+          if (id.includes("node_modules/framer-motion")) {
+            return "vendor-framer";
+          }
+          if (id.includes("node_modules/@react-three")) {
+            return "vendor-three-react";
+          }
+          if (id.includes("node_modules/three")) {
+            return "vendor-three";
+          }
+          if (id.includes("node_modules/@emailjs")) {
+            return "vendor-email";
+          }
+        },
+      },
+    },
+    // Increased chunk size warning limit for large dependencies like three.js
+    chunkSizeWarningLimit: 1500,
+    // Optimize CSS code splitting
+    cssCodeSplit: true,
+  },
 });
