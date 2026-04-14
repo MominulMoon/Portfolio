@@ -117,3 +117,6 @@ npm run lint
 | University  | RUET (Rajshahi University of Engineering & Technology) |
 | Location    | Tikapara, Rajshahi, Bangladesh                         |
 | Focus Areas | MERN Stack, Data Science, Machine Learning             |
+
+<b>Email </b> : m.mmoon1527@gmail.com
+
