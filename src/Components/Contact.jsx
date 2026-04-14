@@ -166,7 +166,7 @@ function Contact({ scrollReveal }) {
             transition={{ duration: 0.35 }}
             onMouseMove={handleCardMouseMove}
           >
-            <form ref={formRef} onSubmit={handleSubmit}>
+            <form ref={formRef} onSubmit={handleSubmit} aria-label="Contact form">
               <div className="form-group">
                 <input
                   type="text"

@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState, useRef } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion, useInView, AnimatePresence } from "framer-motion";
 
 // Codeforces and GitHub handles
@@ -204,7 +204,6 @@ export default function Stats() {
   const [ghErr, setGhErr] = useState(false);
 
   const headerRef = useRef(null);
-  const sectionRef = useRef(null);
   const headerInView = useInView(headerRef, { once: true });
 
   // Fetch Codeforces user info and rating history in parallel

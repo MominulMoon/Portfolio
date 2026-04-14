@@ -85,6 +85,9 @@ function Skill({ scrollReveal }) {
     <section id="skills" className="section skills">
       <div className="container">
         <h2 className="section-title">Skills & Expertise</h2>
+        <p className="section-subtitle">
+          A snapshot of my current stack and confidence level across development areas.
+        </p>
         <div className="skills-content">
           <div className="skills-grid">
             {skillsData.map(({ category, skills }) => (

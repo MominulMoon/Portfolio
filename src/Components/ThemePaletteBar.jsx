@@ -1,6 +1,16 @@
 import { applyThemePalette, paletteDots } from "../themePalettes";
+import { useState } from "react";
 
 function ThemePaletteBar() {
+  const [activePalette, setActivePalette] = useState(
+    () => localStorage.getItem("portfolio-theme") || "current",
+  );
+
+  const handlePaletteClick = (paletteId) => {
+    applyThemePalette(paletteId);
+    setActivePalette(paletteId);
+  };
+
   return (
     <div className="flex justify-center">
       <div className="group">
@@ -10,9 +20,10 @@ function ThemePaletteBar() {
               key={dot.id}
               type="button"
               aria-label={`Switch theme to ${dot.label}`}
+              aria-pressed={activePalette === dot.id}
               className="h-4 w-4 rounded-full border border-white/60 shadow-[0_0_12px_rgba(255,255,255,0.22)] transition hover:scale-110"
               style={{ backgroundColor: dot.color }}
-              onClick={() => applyThemePalette(dot.id)}
+              onClick={() => handlePaletteClick(dot.id)}
             />
           ))}
         </div>

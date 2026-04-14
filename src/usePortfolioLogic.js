@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { animate, inView, useScroll, useMotionValueEvent } from "framer-motion";
+import { animate, useScroll, useMotionValueEvent } from "framer-motion";
 
 /**
  * useStickyHeader
  * Uses Framer Motion's `useScroll` to attach a scroll listener without needing
  * a manual `window.addEventListener`. It toggles a 'scrolled' class on the header
- * when the user scrolls down more than 50px, which applying styling for a shrunken/opaque header.
+ * when the user scrolls down more than 50px, applying compact header styles.
  */
 function useStickyHeader() {
   const { scrollY } = useScroll();
@@ -45,8 +45,8 @@ function useSmoothScroll() {
 /**
  * useNotifications
  * Exposes a global window function `showPortfolioToast` to create temporary
- * notification toasts. It leverages Framer Motion's `animate` function to control
- * entering and exiting slide animations before removing the DOM node cleanly.
+ * notification toasts. It uses Framer Motion's `animate` to handle smooth
+ * enter/exit motion before cleaning up the toast node.
  */
 function useNotifications() {
   useEffect(() => {

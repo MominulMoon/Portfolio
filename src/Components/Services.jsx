@@ -57,6 +57,9 @@ function Services({ scrollReveal }) {
     <section id="service" className="section services">
       <div className="container">
         <h2 className="section-title">What I Do</h2>
+        <p className="section-subtitle">
+          Practical services focused on clean code, maintainable delivery, and strong UX.
+        </p>
         <div className="services-content">
           <div className="services-grid">
             {servicesData.map((service) => (

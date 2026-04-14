@@ -3,6 +3,14 @@ import { Stars } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 
+const GALAXY_CONFIG = {
+  radius: 220,
+  depth: 80,
+  count: 2200,
+  factor: 4,
+  speed: 0.55,
+};
+
 function GalaxyField() {
   const groupRef = useRef(null);
 
@@ -15,13 +23,13 @@ function GalaxyField() {
   return (
     <group ref={groupRef}>
       <Stars
-        radius={220}
-        depth={80}
-        count={2200}
-        factor={4}
+        radius={GALAXY_CONFIG.radius}
+        depth={GALAXY_CONFIG.depth}
+        count={GALAXY_CONFIG.count}
+        factor={GALAXY_CONFIG.factor}
         saturation={0}
         fade
-        speed={0.55}
+        speed={GALAXY_CONFIG.speed}
       />
       <mesh position={[0, 0, -30]}>
         <sphereGeometry args={[32, 48, 48]} />

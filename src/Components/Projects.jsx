@@ -242,19 +242,10 @@ function Projects({ scrollReveal }) {
     }
   }, [scrollReveal]);
 
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") {
-        handleCloseProject();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
-
   const handleOpenProject = (project, rect) => {
     const sectionRect = sectionRef.current?.getBoundingClientRect();
     if (rect && sectionRect) {
+      // Save card origin so modal can animate out from exact click position.
       const nextOrigin = {
         top: rect.top - sectionRect.top,
         left: rect.left - sectionRect.left,
@@ -300,13 +291,23 @@ function Projects({ scrollReveal }) {
     setActiveProject(project);
   };
 
-  const handleCloseProject = () => {
+  function handleCloseProject() {
     setActiveProject(null);
     setTimeout(() => {
       setOriginRect(null);
       setTargetRect(null);
     }, 260);
-  };
+  }
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        handleCloseProject();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const handleLiveClick = (e, liveLink, title) => {
     e.stopPropagation();
@@ -315,7 +316,7 @@ function Projects({ scrollReveal }) {
     } else {
       e.preventDefault();
       setToast(
-        `"${title}" doesn't have a live demo yet.Pleae use the GitHub link to view the code.`,
+        `"${title}" doesn't have a live demo yet. Please use the GitHub link to view the code.`,
       );
     }
   };

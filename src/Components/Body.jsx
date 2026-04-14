@@ -13,11 +13,13 @@ import Projects from "./Projects";
 function Body({ typedText, scrollReveal, buttonAction }) {
   return (
     <div className="body-3d-space">
+      {/* Hero + introduction */}
       <ProfileCard
         typedText={typedText}
         scrollReveal={scrollReveal}
         buttonAction={buttonAction}
       />
+      {/* Core portfolio sections */}
       <About scrollReveal={scrollReveal} buttonAction={buttonAction} />
       <Skill scrollReveal={scrollReveal} />
       <Stats scrollReveal={scrollReveal} />

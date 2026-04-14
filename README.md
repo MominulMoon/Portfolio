@@ -1,91 +1,119 @@
 # MD Moon - Personal Portfolio
 
-A sleek, interactive, and fully responsive personal developer portfolio designed to showcase projects, skills, and professional services. Built with modern web technologies, this portfolio delivers a premium user experience through smooth gesture-based carousels, fluid animations, and a seamless direct messaging system powered by EmailJS.
+Interactive personal portfolio built with React + Vite, focused on smooth motion, a strong visual theme, and real portfolio utility (live stats, project details, direct messaging, and dynamic theming).
 
 ## Live Demo
 
-Check out the live project here: [https://moonportfolio2715.netlify.app/](https://moonportfolio2715.netlify.app/)
+[moonportfolio2715.netlify.app](https://moonportfolio2715.netlify.app/)
 
-## Project Overview
+## Tech Stack
 
-This repository contains the source code for my personal developer portfolio website. It is designed to showcase my technical skills, educational background, professional services, and featured projects. The portfolio emphasizes a modern, clean, and highly responsive user experience created natively with React and enriched with smooth, interactive animations via Framer Motion.
-
-## Technology Used in the Project
-
-- **Core Technologies:** HTML5, CSS3, JavaScript (JS)
-- **Frontend Architecture:** React (with Vite for fast compilation)
-- **Interactions & Animations:** Framer Motion (for drag carousels and hover effects)
-- **Styling:** Custom Vanilla CSS with robust responsive grid systems
-- **Typography & Icons:** FontAwesome & modern web fonts
-- **Messaging API:** EmailJS (for processing direct messages from the contact form)
-- **Hosting:** Netlify
+| Layer               | Tools                                                 |
+| ------------------- | ----------------------------------------------------- |
+| Frontend            | React 19, Vite 8                                      |
+| Motion & UI effects | Framer Motion                                         |
+| 3D visuals          | Three.js, `@react-three/fiber`, `@react-three/drei`   |
+| Styling             | Tailwind CSS (utility classes) + custom CSS variables |
+| Messaging           | EmailJS                                               |
+| Data integrations   | Codeforces + GitHub stats widgets                     |
+| Deployment          | Netlify                                               |
 
 ## Project Structure
 
 ```text
 Portfolio/
-├── public/                 # Static assets directly served by Vite
-│   ├── CV.pdf              # Downloadable resume
-│   ├── SVG.svg             # Application favicon
-│   └── icons.svg           # Icon spritesheet
-├── src/                    # Primary application source code
-│   ├── assets/             # Images and design assets
-│   ├── Components/         # Modular React components
-│   │   ├── About.jsx       # Personal biography section
-│   │   ├── Body.jsx        # Main layout wrapper
-│   │   ├── Contact.jsx     # Contact links and direct messaging form
-│   │   ├── Header.jsx      # Sticky navigation menu
-│   │   ├── ProfileCard.jsx # Profile overview and social connectivity
-│   │   ├── Projects.jsx    # Draggable Framer Motion project carousel
-│   │   ├── Services.jsx    # Service offerings showcase
-│   │   ├── Skill.jsx       # Technical skill badges
-│   │   └── Stats.jsx       # Interactive experience statistics
-│   ├── App.jsx             # Root application component
-│   ├── index.css           # Global styling and design tokens
-│   ├── main.jsx            # Application entry point
-│   └── usePortfolioLogic.js # Custom hook for shared animation & state logic
-├── index.html              # HTML shell template
-├── package.json            # Deployment scripts and NPM dependencies
-└── vite.config.js          # Vite environment configuration
+├── public/
+│   ├── CV.pdf
+│   └── SVG.svg
+├── src/
+│   ├── assets/
+│   ├── Components/
+│   │   ├── Header.jsx            # sticky nav + mobile menu
+│   │   ├── ThemePaletteBar.jsx   # theme color switch buttons
+│   │   ├── ProfileCard.jsx       # hero/profile section
+│   │   ├── About.jsx             # bio + interactive highlights
+│   │   ├── Skill.jsx             # skills grid
+│   │   ├── Stats.jsx             # Codeforces/GitHub live stats
+│   │   ├── Services.jsx          # services cards
+│   │   ├── Projects.jsx          # 3D project cards + expandable modal
+│   │   ├── Contact.jsx           # retro contact section + EmailJS form
+│   │   ├── Body.jsx              # composes the main sections
+│   │   └── GalaxyBackground.jsx  # global 3D starfield
+│   ├── App.jsx                   # top-level app composition + global effects
+│   ├── usePortfolioLogic.js      # sticky header, smooth scroll, toasts, load logic
+│   ├── themePalettes.js          # centralized theme palette definitions
+│   ├── index.css
+│   └── main.jsx
+├── package.json
+└── README.md
 ```
 
-## Manual Deployment
+## Code Logic (High-Level)
 
-To run this project locally on your machine, follow these steps:
+1. `App.jsx` mounts global behavior, page sections, cursor glow, and theme defaults.
+2. `usePortfolioLogic.js` runs DOM-level utilities (sticky header, smooth anchor scrolling, toasts, page fade-in).
+3. `ThemePaletteBar.jsx` updates CSS variables through `themePalettes.js` to recolor the entire app.
+4. Section components (`ProfileCard`, `About`, `Projects`, `Contact`, etc.) receive reveal/action helpers and render self-contained UI blocks.
+5. `Projects.jsx` handles 3D hover + scroll depth effects and in-section expanded detail modal.
+6. `Contact.jsx` manages EmailJS submission state (`idle`, `sending`, `success`, `error`) and displays feedback in the submit button.
 
-### Prerequisites:
+## Feature Highlights
 
-You must have [Node.js](https://nodejs.org/) installed before running the project.
+### 1) Change Color Palette
 
-### Installation:
+Switch among predefined themes to recolor accents, gradients, borders, and cursor glow in real time.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/MominulMoon/Portfolio.git
-   ```
-2. **Navigate into the target directory:**
-   ```bash
-   cd Portfolio
-   ```
-3. **Install the required dependencies:**
-   ```bash
-   npm i
-   ```
+![Change color palette](public/ColorP.png)
 
-### Running the Environment:
+### 2) Live Stats (Codeforces + GitHub)
 
-To start the local Vite development server, execute:
+Displays active rating/contest/contribution metrics and GitHub activity heatmap.
+
+![Live stats](public/Stats.png)
+
+### 3) Project Overview
+
+Click project cards to open expanded overview with stack tags and quick links.
+
+![Project overview](public/Overview.png)
+
+### 4) Send Direct Message
+
+Visitors can send messages directly through the built-in EmailJS contact form.
+
+![Direct message](public/email.png)
+
+## Useful Commands
 
 ```bash
+# clone the repository
+git clone https://github.com/MominulMoon/Portfolio.git
+
+# move into project directory
+cd Portfolio
+
+# install dependencies
+npm install
+
+# start local dev server
 npm run dev
+
+# build for production
+npm run build
+
+# preview production build locally
+npm run preview
+
+# run lint checks
+npm run lint
 ```
 
-The application will spin up and become accessible locally, typically at `http://localhost:5173`.
+## Developer Info
 
-## About the Developer
-
-- **Name:** MD Moon
-- **Degree:** B.Sc. in Computer Science & Engineering (CSE)
-- **University:** Rajshahi University of Engineering & Technology (RUET)
-- **Location:** Kazla, Rajshahi, Bangladesh
-- **Interests & Learning Focus:** MERN Stack, Data Science, Machine Learning
+| Field       | Value                                                  |
+| ----------- | ------------------------------------------------------ |
+| Name        | MD Moon Babu                                           |
+| Degree      | B.Sc. in CSE (Running)                                 |
+| University  | RUET (Rajshahi University of Engineering & Technology) |
+| Location    | Tikapara, Rajshahi, Bangladesh                         |
+| Focus Areas | MERN Stack, Data Science, Machine Learning             |

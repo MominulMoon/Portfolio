@@ -290,6 +290,15 @@ header.scrolled {
   border-radius: 2px;
 }
 
+.section-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  max-width: 760px;
+  margin: -1.4rem auto 2.3rem;
+  font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+  line-height: 1.7;
+}
+
 /* Enhanced Home Section */
 .home {
   background: radial-gradient(
@@ -2217,6 +2226,19 @@ body.loaded {
   z-index: 1001;
 }
 
+.palette-below-header .group > div {
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+}
+
+.palette-below-header button[aria-pressed="true"] {
+  transform: scale(1.22);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.68),
+    0 0 18px rgba(var(--glow-primary-rgb), 0.52);
+}
+
 @media (max-width: 768px) {
   .palette-below-header {
     top: 72px;
@@ -2259,6 +2281,17 @@ body.loaded {
 .project-link--disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+/* Global polish layer (subtle, theme-aware, non-disruptive) */
+.section {
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
+}
+
+.section:hover {
+  filter: saturate(1.03);
 }
 
 /* ── Toast notification ─────────────────────────────────────── */

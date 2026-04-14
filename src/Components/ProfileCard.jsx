@@ -73,6 +73,7 @@ function ProfileCard({ typedText, scrollReveal, buttonAction }) {
         <div className="container">
           <div className="home-content">
             <div className="home-text">
+              {/* Intro block */}
               <div className="greeting">
                 👋 Assalamualaikum Wa rahmatullah wa barakatuh <br /> (
                 السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ )

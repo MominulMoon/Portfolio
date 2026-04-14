@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-// eslint-disable-next-line no-unused-vars
 import {
-  motion,
+  motion, // eslint-disable-line no-unused-vars
   AnimatePresence,
   useMotionValue,
   useSpring,
@@ -50,6 +49,7 @@ const highlights = [
  * when the user scrolls to the `#about` module.
  */
 function About({ scrollReveal, buttonAction }) {
+  // Section + modal placement tracking
   const sectionRef = useRef(null);
   const imageBoundsRef = useRef(null);
   const [activeHighlight, setActiveHighlight] = useState(null);
@@ -57,6 +57,7 @@ function About({ scrollReveal, buttonAction }) {
   const [targetRect, setTargetRect] = useState(null);
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
+  // Spring smoothing keeps the tilt stable and avoids sudden jitter.
   const smoothRotateX = useSpring(rotateX, { stiffness: 300, damping: 30, mass: 0.45 });
   const smoothRotateY = useSpring(rotateY, { stiffness: 300, damping: 30, mass: 0.45 });
 
@@ -69,16 +70,6 @@ function About({ scrollReveal, buttonAction }) {
       return () => cleanups.forEach((c) => c && c());
     }
   }, [scrollReveal]);
-
-  useEffect(() => {
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") {
-        handleCloseHighlight();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
 
   const handleCardMouseMove = (e) => {
     const card = e.currentTarget;
@@ -142,13 +133,23 @@ function About({ scrollReveal, buttonAction }) {
     setActiveHighlight(item);
   };
 
-  const handleCloseHighlight = () => {
+  function handleCloseHighlight() {
     setActiveHighlight(null);
     setTimeout(() => {
       setOriginRect(null);
       setTargetRect(null);
     }, 260);
-  };
+  }
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        handleCloseHighlight();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <div>

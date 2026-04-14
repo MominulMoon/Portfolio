@@ -5,6 +5,16 @@
  * active section to highly the active link. It also intercepts clicks on the CTA button
  * to execute the inherited ripple animation.
  */
+const navItems = [
+  { id: "#home", label: "Home" },
+  { id: "#about", label: "About" },
+  { id: "#skills", label: "Skills" },
+  { id: "#stats", label: "Stats" },
+  { id: "#service", label: "Services" },
+  { id: "#project", label: "Projects" },
+  { id: "#contact", label: "Contact" },
+];
+
 function Header({
   activeSection,
   isMenuOpen,
@@ -13,16 +23,6 @@ function Header({
   buttonAction,
   onHeaderHoverChange,
 }) {
-  const navItems = [
-    { id: "#home", label: "Home" },
-    { id: "#about", label: "About" },
-    { id: "#skills", label: "Skills" },
-    { id: "#stats", label: "Stats" },
-    { id: "#service", label: "Services" },
-    { id: "#project", label: "Projects" },
-    { id: "#contact", label: "Contact" },
-  ];
-
   return (
     <header
       onMouseEnter={() => onHeaderHoverChange?.(true)}

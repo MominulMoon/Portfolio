@@ -15,7 +15,7 @@ import ThemePaletteBar from "./Components/ThemePaletteBar";
 import Body from "./Components/Body";
 import Contact from "./Components/Contact";
 import GalaxyBackground from "./Components/GalaxyBackground";
-import { applyThemePalette } from "./themePalettes";
+import { applyThemePalette, DEFAULT_PALETTE_ID } from "./themePalettes";
 
 import { usePortfolioLogic } from "./usePortfolioLogic";
 
@@ -266,8 +266,12 @@ const headerVariants = {
   },
 };
 
+const TOP_THRESHOLD = 80;
+const PALETTE_HIDE_DELAY_TOP = 3000;
+const PALETTE_HIDE_DELAY_SCROLLED = 500;
+
 function App() {
-  //Mount the Global Logic in this with vanilla JS making App.jsx few line shorter :)(e.g. notifications, sticky header, smooth scroll)
+  // Mount global app-level behaviors (sticky header, smooth scroll, toasts, page load).
   usePortfolioLogic();
   // Generate dynamic typing text for the hero section
   const typedText = useTypewriter();
@@ -281,7 +285,7 @@ function App() {
   const scrollReveal = useScrollReveal();
   const buttonAction = useButtonActions();
 
-  // Track mouse X/Y coordinates for the background glow effect (starts off-screen)
+  // Cursor-tracked glow starts off-screen before the first movement.
   const mouseX = useMotionValue(-500);
   const mouseY = useMotionValue(-500);
   // Track the fade-in opacity of the mouse glow
@@ -310,12 +314,12 @@ function App() {
     animate(glowOpacity, 0, { duration: 0.6, ease: "easeIn" });
 
   useEffect(() => {
-    applyThemePalette("current");
+    applyThemePalette(DEFAULT_PALETTE_ID);
   }, []);
 
   useEffect(() => {
     const onScroll = () => {
-      setIsAtTop(window.scrollY < 80);
+      setIsAtTop(window.scrollY < TOP_THRESHOLD);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -323,14 +327,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    let hideTimer;
+    let timer;
     if (isAtTop && isHeaderHovered) {
-      setShowPaletteBar(true);
+      timer = setTimeout(() => setShowPaletteBar(true), 0);
     } else {
-      const hideDelay = isAtTop ? 3000 : 500;
-      hideTimer = setTimeout(() => setShowPaletteBar(false), hideDelay);
+      const hideDelay = isAtTop ? PALETTE_HIDE_DELAY_TOP : PALETTE_HIDE_DELAY_SCROLLED;
+      timer = setTimeout(() => setShowPaletteBar(false), hideDelay);
     }
-    return () => clearTimeout(hideTimer);
+    return () => clearTimeout(timer);
   }, [isAtTop, isHeaderHovered]);
 
   return (

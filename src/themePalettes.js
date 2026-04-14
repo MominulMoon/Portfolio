@@ -1,5 +1,7 @@
+export const DEFAULT_PALETTE_ID = "current";
+
 export const colorPalettes = {
-  current: {
+  [DEFAULT_PALETTE_ID]: {
     accentPrimary: "#00d4ff",
     accentSecondary: "#0099cc",
     gradient: "linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)",
@@ -47,7 +49,7 @@ export const colorPalettes = {
 };
 
 export const paletteDots = [
-  { id: "current", label: "Default cyan", color: "#00d4ff" },
+  { id: DEFAULT_PALETTE_ID, label: "Default cyan", color: "#00d4ff" },
   { id: "green", label: "Green", color: "#4ade80" },
   { id: "orange", label: "Orange", color: "#fb923c" },
   { id: "purple", label: "Purple", color: "#a78bfa" },
@@ -55,7 +57,8 @@ export const paletteDots = [
 ];
 
 export function applyThemePalette(paletteId) {
-  const palette = colorPalettes[paletteId] || colorPalettes.current;
+  const safePaletteId = colorPalettes[paletteId] ? paletteId : DEFAULT_PALETTE_ID;
+  const palette = colorPalettes[safePaletteId];
   const root = document.documentElement;
   root.style.setProperty("--accent-primary", palette.accentPrimary);
   root.style.setProperty("--accent-secondary", palette.accentSecondary);
@@ -64,9 +67,9 @@ export function applyThemePalette(paletteId) {
   root.style.setProperty("--border-accent", palette.borderAccent);
   root.style.setProperty("--glow-primary-rgb", palette.glowPrimaryRgb);
   root.style.setProperty("--glow-secondary-rgb", palette.glowSecondaryRgb);
-  localStorage.setItem("portfolio-theme", paletteId);
+  localStorage.setItem("portfolio-theme", safePaletteId);
 }
 
 export function getStoredThemeId() {
-  return localStorage.getItem("portfolio-theme") || "current";
+  return localStorage.getItem("portfolio-theme") || DEFAULT_PALETTE_ID;
 }
