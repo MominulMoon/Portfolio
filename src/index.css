@@ -1,5 +1,7 @@
-/* CSS Variables */
-/*This CSS file was premade by Ayan24 and modified by me for this project */
+/* ==========================================================================
+   CSS Variables & Design Tokens
+   ========================================================================== */
+/* This CSS file was premade by Ayan24 and modified by me for this project */
 /* Import Tailwind */
 @import "tailwindcss";
 :root {
@@ -28,6 +30,9 @@
   --glow-secondary-rgb: 0, 153, 204;
 }
 
+/* ==========================================================================
+   Base Reset & Typography
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
@@ -102,7 +107,9 @@ body {
   padding: 0 2rem;
 }
 
-/* Scrollbar Styling */
+/* ==========================================================================
+   Layout Components (Scrollbar, Global Containers)
+   ========================================================================== */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -120,7 +127,9 @@ body {
   background: var(--accent-gradient-hover);
 }
 
-/* Enhanced Header */
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
 header {
   position: fixed;
   top: 0;
@@ -279,7 +288,10 @@ header.scrolled {
   transform: rotate(-45deg) translate(7px, -6px);
 }
 
-/* Sections */
+/* ==========================================================================
+   General Section Layouts
+   ========================================================================== */
+/* Each section has a 3D perspective and background glow effects */
 .section {
   min-height: 100vh;
   display: flex;
@@ -350,7 +362,9 @@ header.scrolled {
   line-height: 1.7;
 }
 
-/* Enhanced Home Section */
+/* ==========================================================================
+   Home (Hero) Section
+   ========================================================================== */
 .home {
   background: radial-gradient(
     ellipse at center,
@@ -680,7 +694,9 @@ header.scrolled {
   right: -15%;
   animation-delay: 4.5s;
 }
-/* Enhanced About Section */
+/* ==========================================================================
+   About Section
+   ========================================================================== */
 .about {
   background: rgba(17, 17, 17, 0.78);
   position: relative;
@@ -1598,7 +1614,9 @@ header.scrolled {
   transition: width 1s ease;
 }
 
-/* Services Section */
+/* ==========================================================================
+   Services Section
+   ========================================================================== */
 .services {
   background: rgba(17, 17, 17, 0.76);
   position: relative;
@@ -1698,7 +1716,9 @@ header.scrolled {
   font-weight: 500;
 }
 
-/* Projects Section */
+/* ==========================================================================
+   Projects Section
+   ========================================================================== */
 .projects {
   background: rgba(10, 10, 10, 0.72);
   position: relative;
@@ -1967,7 +1987,9 @@ header.scrolled {
   gap: 0.45rem;
 }
 
-/* Contact Section */
+/* ==========================================================================
+   Contact Section
+   ========================================================================== */
 .contact {
   background: rgba(17, 17, 17, 0.78);
   position: relative;
@@ -2232,7 +2254,10 @@ header.scrolled {
   }
 }
 
-/* ─── Page Load Fade-in ──────────────────────────────────────────────────────── */
+/* ==========================================================================
+   Page Load Fade-in
+   ========================================================================== */
+/* Triggers a smooth opacity transition for the entire body once loaded */
 body.loaded {
   animation: page-fade-in 0.4s ease both;
 }
@@ -2246,7 +2271,9 @@ body.loaded {
   }
 }
 
-/* ─── Focus-visible Accessibility ───────────────────────────────────────────── */
+/* ==========================================================================
+   Accessibility & Focus States
+   ========================================================================== */
 .nav-link:focus-visible,
 .social-icon:focus-visible,
 .hire-btn:focus-visible,
@@ -2256,7 +2283,9 @@ body.loaded {
   outline-offset: 3px;
 }
 
-/* ─── App Root Wrapper ───────────────────────────────────────────────────────── */
+/* ==========================================================================
+   App Root & Layout Wrappers
+   ========================================================================== */
 .app-wrapper {
   position: relative;
   z-index: 0;
@@ -2296,7 +2325,9 @@ body.loaded {
   }
 }
 
-/* ─── Mouse Glow Overlay ─────────────────────────────────────────────────────── */
+/* ==========================================================================
+   Special Effects (Mouse Glow & Canvas Background)
+   ========================================================================== */
 .glow-overlay {
   position: fixed;
   inset: 0;

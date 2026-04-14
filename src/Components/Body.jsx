@@ -5,10 +5,15 @@ import Stats from "./Stats";
 import Services from "./Services";
 import Projects from "./Projects";
 /**
- * Body
- * Acts as an orchestrator for the main portfolio sections.
- * Passes the `scrollReveal` and `buttonAction` hooks down sequentially to all
- * inner child components so they can register their own animations and events.
+ * Body Component
+ * 
+ * The main container for the portfolio's core sections. It dictates the layout 
+ * hierarchy and coordinates the distribution of shared animation and interaction hooks.
+ * 
+ * @param {Object} props
+ * @param {string} props.typedText - The dynamic text for the hero typewriter effect.
+ * @param {Function} props.scrollReveal - Hook function to trigger viewport-based scroll animations.
+ * @param {Function} props.buttonAction - Shared handler for interactive button effects like ripples.
  */
 function Body({ typedText, scrollReveal, buttonAction }) {
   return (

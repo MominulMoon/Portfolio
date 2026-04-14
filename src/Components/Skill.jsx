@@ -7,6 +7,7 @@ import { useEffect } from "react";
  * cards as the user begins scrolling down the page.
  */
 
+/** Categorized technical skills with icons and proficiency levels */
 const skillsData = [
   {
     category: "Frontend Development",
@@ -74,6 +75,16 @@ const skillsData = [
   },
 ];
 
+/**
+ * Skill Component
+ * 
+ * Renders a grid of technical skills split by category.
+ * Hooks into scrollReveal to sequentially animate skill bars and category 
+ * cards as the user begins scrolling down the page.
+ * 
+ * @param {Object} props
+ * @param {Function} props.scrollReveal - Shared hook for viewport animations.
+ */
 function Skill({ scrollReveal }) {
   useEffect(() => {
     if (scrollReveal) {

@@ -278,24 +278,35 @@ const PALETTE_HIDE_DELAY_SCROLLED = 500;
 function App() {
   // Mount global app-level behaviors (sticky header, smooth scroll, toasts, page load).
   usePortfolioLogic();
+  
   // Generate dynamic typing text for the hero section
   const typedText = useTypewriter();
-  // Track the currently viewed section for the navbar
+  
+  // Track the currently viewed section via scroll position for the navbar active state
   const activeSection = useActiveNav();
-  // Manage mobile hamburger menu state
+  
+  // Manage mobile hamburger menu state (open/close/toggle)
   const { isMenuOpen, toggleMenu, closeMenu } = useMobileMenu();
+  
+  // UI state for header transparency and palette visibility
   const [isAtTop, setIsAtTop] = useState(true);
   const [isHeaderHovered, setIsHeaderHovered] = useState(false);
   const [showPaletteBar, setShowPaletteBar] = useState(false);
+  
+  // Global loading state for the entry screen
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Hooks for scroll-driven animations and interactive button effects
   const scrollReveal = useScrollReveal();
   const buttonAction = useButtonActions();
 
-  // Cursor-tracked glow starts off-screen before the first movement.
+  // --- Framer Motion Values for Cursor-tracked Glow ---
+  // Cursor position starts off-screen
   const mouseX = useMotionValue(-500);
   const mouseY = useMotionValue(-500);
-  // Track the fade-in opacity of the mouse glow
+  // Track the glow container opacity
   const glowOpacity = useMotionValue(0);
+  // RGB colors synced with the current theme palette
   const glowPrimaryRgb = useMotionValue(
     colorPalettes[getStoredThemeId()]?.glowPrimaryRgb ?? "0, 212, 255",
   );
@@ -363,11 +374,14 @@ function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Effect to hide/show the palette bar based on header hover and scroll status
   useEffect(() => {
     let timer;
     if (isAtTop && isHeaderHovered) {
+      // Show immediately at top when hovered
       timer = setTimeout(() => setShowPaletteBar(true), 0);
     } else {
+      // Delayed hide when moving away or scrolling down
       const hideDelay = isAtTop
         ? PALETTE_HIDE_DELAY_TOP
         : PALETTE_HIDE_DELAY_SCROLLED;

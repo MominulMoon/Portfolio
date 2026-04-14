@@ -3,6 +3,7 @@ import { Stars } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
+/** configuration for the starfield effect */
 const GALAXY_CONFIG = {
   radius: 220,
   depth: 80,
@@ -11,6 +12,15 @@ const GALAXY_CONFIG = {
   speed: 0.55,
 };
 
+/**
+ * GalaxyField sub-component
+ * 
+ * Defines the Three.js objects (Stars and a wireframe sphere) and handles 
+ * the frame-by-frame rotation logic using the useFrame hook.
+ * 
+ * @param {Object} props
+ * @param {string} props.accentColor - The hex/color string to apply to the sphere.
+ */
 function GalaxyField({ accentColor }) {
   const groupRef = useRef(null);
 
@@ -44,6 +54,12 @@ function GalaxyField({ accentColor }) {
   );
 }
 
+/**
+ * GalaxyBackground Component
+ * 
+ * Renders a full-screen, fixed-position 3D starfield background using React Three Fiber.
+ * It tracks the global accent color from CSS variables and updates when the theme changes.
+ */
 function GalaxyBackground() {
   const [accentColor, setAccentColor] = useState(
     () =>

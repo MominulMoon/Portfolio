@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import MoonBabu from "../assets/Moon.jpeg";
 import CFIcon from "../assets/CF.SVG";
 
+/** Data for social media links, including labels, icon classes, and external URLs */
 const socialLinks = [
   {
     label: "WhatsApp",
@@ -35,12 +36,14 @@ const socialLinks = [
   },
 ];
 
+/** Summary statistics displayed in the hero section */
 const stats = [
   { number: "15+", label: "Projects Completed" },
   { number: "1+", label: "Years Experience" },
   { number: "CSE", label: "RUET" },
 ];
 
+/** Interactive floating cards shown around the profile image */
 const floatingCards = [
   { icon: "fas fa-code", label: "Clean Code", cardClass: "card-1" },
   { icon: "fas fa-mobile-alt", label: "Learner", cardClass: "card-2" },
@@ -48,10 +51,15 @@ const floatingCards = [
 ];
 
 /**
- * ProfileCard
- * Renders the primary hero section elements (greeting, name, typed profession, statistics).
- * Leverages the passed `scrollReveal` prop to bind fade-up animations to specific
- * sub-element class names on mount.
+ * ProfileCard Component
+ * 
+ * Renders the primary hero section elements including greeting, name,
+ * typed profession through typewriter hook, profile bio, and statistics.
+ * 
+ * @param {Object} props
+ * @param {string} props.typedText - The current text from the typewriter effect.
+ * @param {Function} props.scrollReveal - Factory function to register scroll-reveal animations.
+ * @param {Function} props.buttonAction - Handler for interactive button ripples and clicks.
  */
 function ProfileCard({ typedText, scrollReveal, buttonAction }) {
   useEffect(() => {

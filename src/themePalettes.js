@@ -1,5 +1,10 @@
+/** Default palette identifier used if no theme is stored or selected */
 export const DEFAULT_PALETTE_ID = "current";
 
+/**
+ * Collection of color palettes for the application.
+ * Each palette defines primary/secondary colors, gradients, and RGB values for glow effects.
+ */
 export const colorPalettes = {
   [DEFAULT_PALETTE_ID]: {
     accentPrimary: "#00d4ff",
@@ -48,6 +53,7 @@ export const colorPalettes = {
   },
 };
 
+/** List of available palette options for the theme selection UI */
 export const paletteDots = [
   { id: DEFAULT_PALETTE_ID, label: "Default cyan", color: "#00d4ff" },
   { id: "green", label: "Green", color: "#4ade80" },
@@ -56,6 +62,12 @@ export const paletteDots = [
   { id: "darkBlue", label: "Dark blue", color: "#60a5fa" },
 ];
 
+/**
+ * Applies a selected color palette to the application by updating CSS variables on the root element.
+ * It also persists the selection in localStorage and dispatches a 'themeChange' event.
+ * 
+ * @param {string} paletteId - The ID of the palette to apply.
+ */
 export function applyThemePalette(paletteId) {
   const safePaletteId = colorPalettes[paletteId]
     ? paletteId
@@ -79,6 +91,12 @@ export function applyThemePalette(paletteId) {
   );
 }
 
+/**
+ * Retrieves the last saved theme ID from localStorage.
+ * Defaults to the DEFAULT_PALETTE_ID if none is found.
+ * 
+ * @returns {string} The stored theme ID.
+ */
 export function getStoredThemeId() {
   return localStorage.getItem("portfolio-theme") || DEFAULT_PALETTE_ID;
 }

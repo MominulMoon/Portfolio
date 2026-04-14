@@ -5,6 +5,14 @@ import { motion } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
+/**
+ * RetroOrb sub-component
+ * 
+ * Renders a spinning 3D torus knot using React Three Fiber.
+ * 
+ * @param {Object} props
+ * @param {string} props.color - The theme color to apply to the mesh wireframe.
+ */
 function RetroOrb({ color }) {
   const meshRef = useRef(null);
 
@@ -26,6 +34,9 @@ const SERVICE_ID = "service_mct6aw4";
 const TEMPLATE_ID = "template_046mmig";
 const PUBLIC_KEY = "bKL4kJw7SbywtDtGt";
 
+/** 
+ * Data for various contact methods including email, phone, location, and WhatsApp.
+ */
 const contactsData = [
   {
     icon: "fas fa-envelope",
@@ -58,9 +69,12 @@ const contactsData = [
 ];
 
 /**
- * Contact
- * Represents the final section of the page, acting as an interactive form and list of contact methods.
- * Registers form groups and contact items to animate dynamically via `scrollReveal`.
+ * Contact Component
+ * 
+ * Includes an interactive email form (via EmailJS) and social contact links.
+ * 
+ * @param {Object} props
+ * @param {Function} props.scrollReveal - Shared hook for viewport animations.
  */
 function Contact({ scrollReveal }) {
   const formRef = useRef(null);
@@ -100,6 +114,10 @@ function Contact({ scrollReveal }) {
     card.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
+  /**
+   * Handles form submission using EmailJS.
+   * Updates the 'status' state to provide visual feedback to the user.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus("sending");
@@ -109,6 +127,7 @@ function Contact({ scrollReveal }) {
       .then(() => {
         setStatus("success");
         formRef.current.reset();
+        // Reset status to idle after a delay
         setTimeout(() => setStatus("idle"), 4000);
       })
       .catch(() => {

@@ -7,6 +7,10 @@ import { useEffect } from "react";
  * for a staggered entrance effect upon scroll visibility.
  */
 
+/** 
+ * Collection of professional services offered by the author.
+ * Includes visual assets, titles, and itemized feature lists.
+ */
 const servicesData = [
   {
     id: 1,
@@ -46,6 +50,15 @@ const servicesData = [
   },
 ];
 
+/**
+ * Services Component
+ * 
+ * Renders various professional services. Binds grid items to the scrollReveal hook
+ * for staggered entrance animations.
+ * 
+ * @param {Object} props
+ * @param {Function} props.scrollReveal - Shared hook for viewport animations.
+ */
 function Services({ scrollReveal }) {
   useEffect(() => {
     if (scrollReveal) {

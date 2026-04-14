@@ -18,6 +18,10 @@ import {
   AnimatePresence,
 } from "framer-motion";
 
+/** 
+ * Collection of portfolio projects. 
+ * Includes metadata for images, titles, descriptions, links, and technology stacks.
+ */
 const projectsData = [
   {
     id: 1,
@@ -108,6 +112,15 @@ const projectsData = [
   },
 ];
 
+/**
+ * Toast sub-component
+ * 
+ * Displays a temporary notification message with a fade-and-slide animation.
+ * 
+ * @param {Object} props
+ * @param {string} props.message - The notification text to display.
+ * @param {Function} props.onDone - Callback triggered after the toast duration expires.
+ */
 function Toast({ message, onDone }) {
   return (
     <AnimatePresence>
@@ -129,6 +142,16 @@ function Toast({ message, onDone }) {
   );
 }
 
+/**
+ * ProjectCard sub-component
+ * 
+ * Renders an individual project thumbnail with 3D hover effects.
+ * 
+ * @param {Object} props
+ * @param {Object} props.project - The project data object.
+ * @param {Function} props.onLiveClick - Handler for specifically clicking the 'Live Demo' button.
+ * @param {Function} props.onOpen - Handler for opening the detailed project modal.
+ */
 function ProjectCard({ project, onLiveClick, onOpen }) {
   const cardRef = useRef(null);
   const rotateX = useMotionValue(0);
@@ -223,10 +246,12 @@ function ProjectCard({ project, onLiveClick, onOpen }) {
 }
 
 /**
- * Projects
- * An interactive portfolio gallery that fetches a declarative list of projects
- * and allows the user to filter dynamically by clicking category pills (e.g. 'React').
- * Triggers Framer layout animations when filtering and scrollReveal when entering the viewport.
+ * Projects Component
+ * 
+ * Displays a responsive grid of portfolio projects with 3D effects and expandable modals.
+ * 
+ * @param {Object} props
+ * @param {Function} props.scrollReveal - Shared hook for viewport-based entrance animations.
  */
 function Projects({ scrollReveal }) {
   const sectionRef = useRef(null);

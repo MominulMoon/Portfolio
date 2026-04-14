@@ -1,9 +1,16 @@
 /**
- * Header
- * Displays the main top navigation bar. Includes a hamburger menu for mobile devices
- * and maps through an array of navigation links. The component subscribes to the current
- * active section to highly the active link. It also intercepts clicks on the CTA button
- * to execute the inherited ripple animation.
+ * Header Component
+ * 
+ * Displays the main top navigation bar. Includes a responsive hamburger menu for 
+ * mobile devices and maps through nav items for link generation.
+ * 
+ * @param {Object} props
+ * @param {string} props.activeSection - The ID of the currently visible section.
+ * @param {boolean} props.isMenuOpen - State of the mobile side-menu.
+ * @param {Function} props.toggleMenu - Handler to open/close mobile side-menu.
+ * @param {Function} props.closeMenu - Handler to close mobile side-menu.
+ * @param {Function} props.buttonAction - Shared handler for button interactive effects.
+ * @param {Function} props.onHeaderHoverChange - Hook to notify sibling components (like the palette bar) of hover state.
  */
 const navItems = [
   { id: "#home", label: "Home" },

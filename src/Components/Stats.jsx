@@ -28,7 +28,11 @@ const RANK_COLORS = {
   "legendary grandmaster": "#FF0000",
 };
 
-// Returns the hex colour for a given rank string
+/**
+ * Maps a Codeforces rank to its corresponding hex color.
+ * @param {string} rank - The rank name (e.g., "expert", "master").
+ * @returns {string} The hex color associated with the rank.
+ */
 function rankColor(rank = "") {
   return RANK_COLORS[rank.toLowerCase()] ?? "var(--accent-primary)";
 }
@@ -38,7 +42,16 @@ function capitalize(str = "") {
   return str.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-// Counts up from 0 to `value` over `duration` seconds
+/**
+ * AnimatedNumber sub-component
+ * 
+ * Performs an interpolation animation to count from 0 to a target value.
+ * Useful for making static numbers feel dynamic.
+ * 
+ * @param {Object} props
+ * @param {number|string} props.value - The target number to count up to.
+ * @param {number} [props.duration=1.4] - Speed of the animation in seconds.
+ */
 function AnimatedNumber({ value, duration = 1.4 }) {
   const [display, setDisplay] = useState(0);
 
@@ -64,7 +77,21 @@ function AnimatedNumber({ value, duration = 1.4 }) {
   return <span>{display.toLocaleString()}</span>;
 }
 
-// A single stat card that animates in when it enters the viewport
+/**
+ * StatCard sub-component
+ * 
+ * Displays a single metric with an icon, label, animated value, and optional 
+ * sub-text. Animates into view when crossing the viewport threshold.
+ * 
+ * @param {Object} props
+ * @param {string|Element} props.icon - Emoji or icon to display.
+ * @param {string} props.label - Category name for the stat.
+ * @param {number|string} props.value - The main metric value.
+ * @param {string} [props.sub] - Optional secondary info.
+ * @param {string} props.color - Theme color for the glow effect.
+ * @param {number} [props.delay=0] - Entrance animation stagger delay.
+ * @param {string} [props.href] - Optional external link for the card.
+ */
 function StatCard({ icon, label, value, sub, color, delay = 0, href }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -135,7 +162,14 @@ function SectionHeader({ title, delay = 0 }) {
   );
 }
 
-// Mini SVG line chart showing rating history over contests
+/**
+ * Sparkline sub-component
+ * 
+ * Renders a simple SVG polyline chart representing the user's rating history.
+ * 
+ * @param {Object} props
+ * @param {Array} props.data - Array of rating history objects from the CF API.
+ */
 function Sparkline({ data }) {
   if (!data || data.length < 2) return null;
 
@@ -198,6 +232,13 @@ function SkeletonRow() {
   );
 }
 
+/**
+ * Stats Component
+ * 
+ * Orchestrates the data fetching and display for Codeforces and GitHub statistics.
+ * It manages multiple loading and error states and coordinates theme-aware colors 
+ * for external charts (like the GitHub heatmap).
+ */
 export default function Stats() {
   const [cf, setCf] = useState(null);
   const [gh, setGh] = useState(null);

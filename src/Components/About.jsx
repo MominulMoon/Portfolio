@@ -8,6 +8,10 @@ import {
 } from "framer-motion";
 import Moon from "../assets/Moon2.jpeg";
 
+/** 
+ * Data for biography highlights, including icons, titles, and 
+ * detailed content for the expansion modal.
+ */
 const highlights = [
   {
     icon: "fas fa-graduation-cap",
@@ -43,10 +47,13 @@ const highlights = [
 ];
 
 /**
- * About
- * Displays the author's biography block. Registers its own `.stat-item` elements
- * with the `scrollReveal` prop to ensure they animate into view smoothly
- * when the user scrolls to the `#about` module.
+ * About Component
+ * 
+ * Displays the biography section with 3D image tilt effects and expandable highlight cards.
+ * 
+ * @param {Object} props
+ * @param {Function} props.scrollReveal - Factory function for scroll-driven visibility.
+ * @param {Function} props.buttonAction - Shared button interaction handler.
  */
 function About({ scrollReveal, buttonAction }) {
   // Section + modal placement tracking
@@ -79,6 +86,7 @@ function About({ scrollReveal, buttonAction }) {
     }
   }, [scrollReveal]);
 
+  /** Update CSS variables for the glass-shimmer mouse trail effect */
   const handleCardMouseMove = (e) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -86,11 +94,12 @@ function About({ scrollReveal, buttonAction }) {
     card.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
+  /** Cache image bounds on hover to optimize mousemove performance */
   const handleImageMouseEnter = (e) => {
     imageBoundsRef.current = e.currentTarget.getBoundingClientRect();
   };
 
-  // Use cached image bounds from pointer-enter so we avoid layout reads on every mousemove.
+  /** Update Framer Motion values for the 3D tilt effect */
   const handleImageMouseMove = (e) => {
     if (!imageBoundsRef.current) return;
     const rect = imageBoundsRef.current;
@@ -108,6 +117,13 @@ function About({ scrollReveal, buttonAction }) {
     animate(rotateY, 0, { duration: 0.45 });
   };
 
+  /**
+   * Triggers the shared expansion animation for a highlight item.
+   * Calculates the origin rectangle to perform a "FLIP" style transition.
+   * 
+   * @param {Object} item - The highlight data object.
+   * @param {DOMRect} rect - The bounding client rect of the clicked element.
+   */
   const handleOpenHighlight = (item, rect) => {
     const sectionRect = sectionRef.current?.getBoundingClientRect();
     if (rect && sectionRect) {

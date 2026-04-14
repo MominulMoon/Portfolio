@@ -1,11 +1,23 @@
 import { applyThemePalette, paletteDots } from "../themePalettes";
 import { useState } from "react";
 
+/**
+ * ThemePaletteBar Component
+ * 
+ * Provides a UI for switching between different color themes.
+ * It manages the active palette state and interacts with the theme utility 
+ * function to update CSS variables across the app.
+ */
 function ThemePaletteBar() {
+  // Initialize state from localStorage to persistent the selection
   const [activePalette, setActivePalette] = useState(
     () => localStorage.getItem("portfolio-theme") || "current",
   );
 
+  /**
+   * Handles theme selection by applying the palette and updating local state.
+   * @param {string} paletteId - The ID of the selected theme palette.
+   */
   const handlePaletteClick = (paletteId) => {
     applyThemePalette(paletteId);
     setActivePalette(paletteId);

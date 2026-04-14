@@ -10,6 +10,7 @@ import { animate, useScroll, useMotionValueEvent } from "framer-motion";
 function useStickyHeader() {
   const { scrollY } = useScroll();
 
+  // Monitor scroll position and toggle 'scrolled' class for header styling
   useMotionValueEvent(scrollY, "change", (y) => {
     document.querySelector("header")?.classList.toggle("scrolled", y > 50);
   });
@@ -25,18 +26,23 @@ function useSmoothScroll() {
   useEffect(() => {
     function handleClick(e) {
       const href = e.currentTarget.getAttribute("href");
+      // Only handle internal anchor links
       if (!href?.startsWith("#")) return;
 
       e.preventDefault();
       const target = document.querySelector(href);
       if (!target) return;
 
+      // Calculate offset to account for fixed header height
       const headerH = document.querySelector("header")?.offsetHeight ?? 80;
       window.scrollTo({ top: target.offsetTop - headerH, behavior: "smooth" });
     }
 
+    // Attach click listeners to all nav links
     const links = document.querySelectorAll(".nav-link");
     links.forEach((l) => l.addEventListener("click", handleClick));
+    
+    // Cleanup listeners on unmount
     return () =>
       links.forEach((l) => l.removeEventListener("click", handleClick));
   }, []);
@@ -50,20 +56,26 @@ function useSmoothScroll() {
  */
 function useNotifications() {
   useEffect(() => {
+    /**
+     * Internal helper to create and animate a toast message.
+     * @param {string} message - Text to display.
+     * @param {string} type - Toast type (info, success, etc).
+     */
     function showToast(message, type = "info") {
+      // Create toast element
       const toast = document.createElement("div");
       toast.className = `toast toast-${type}`;
       toast.innerHTML = `<i class="fas fa-info-circle"></i><span>${message}</span>`;
       document.body.appendChild(toast);
 
-      // Slide in from the right
+      // Slide in from the right using Framer Motion animate
       animate(
         toast,
         { x: ["120%", "0%"] },
         { duration: 0.35, ease: "easeOut" },
       );
 
-      // Slide out and remove after 3 s
+      // Slide out and remove after 3 seconds
       setTimeout(() => {
         animate(toast, { x: "120%" }, { duration: 0.35, ease: "easeIn" }).then(
           () => toast.remove(),
@@ -71,6 +83,7 @@ function useNotifications() {
       }, 3000);
     }
 
+    // Expose the function globally for use throughout the app (including vanilla JS parts)
     window.showPortfolioToast = showToast;
     return () => delete window.showPortfolioToast;
   }, []);
