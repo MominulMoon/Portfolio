@@ -50,12 +50,27 @@ Portfolio/
 
 ## Code Logic (High-Level)
 
-1. `App.jsx` mounts global behavior, page sections, cursor glow, and theme defaults.
-2. `usePortfolioLogic.js` runs DOM-level utilities (sticky header, smooth anchor scrolling, toasts, page fade-in).
-3. `ThemePaletteBar.jsx` updates CSS variables through `themePalettes.js` to recolor the entire app.
-4. Section components (`ProfileCard`, `About`, `Projects`, `Contact`, etc.) receive reveal/action helpers and render self-contained UI blocks.
-5. `Projects.jsx` handles 3D hover + scroll depth effects and in-section expanded detail modal.
-6. `Contact.jsx` manages EmailJS submission state (`idle`, `sending`, `success`, `error`) and displays feedback in the submit button.
+### Foundation
+
+- **`App.jsx`**: Orchestrates global behavior, composition of page sections, custom cursor glow, and initialization of theme defaults.
+- **`usePortfolioLogic.js`**: A custom utility hook that manages DOM-level behaviors such as sticky header transitions, smooth anchor scrolling (via `scrollIntoView`), global toast notifications, and initial page reveal logic.
+- **`Body.jsx`**: Acts as a layout orchestrator, passing shared reveal and interaction hooks down to individual section components to ensure consistent animation timing.
+
+### Global Components
+
+- **`Header.jsx`**: Manages top-level navigation, mobile menu visibility, and dynamically highlights links based on the active viewport section using a custom intersection observer.
+- **`ThemePaletteBar.jsx`**: Enables real-time application theme swapping by updating CSS root variables from `themePalettes.js`. Selections are persisted in `localStorage` for cross-session consistency.
+- **`GalaxyBackground.jsx`**: Uses `@react-three/fiber` to render a global interactive 3D starfield that listens for theme changes to sync its ambient light and wireframe colors.
+
+### Interactive Sections
+
+- **`ProfileCard.jsx`**: The hero module that displays personal stats and a rotating professional title (the typewriter effect). It uses `scrollReveal` to trigger staggered entrance animations for social links and stat badges.
+- **`About.jsx`**: Features a 3D-tilting profile image and interactive "Highlight" cards. Clicking a card triggers a morphing animation that expands the card into a detailed modal using `AnimatePresence`.
+- **`Skill.jsx`**: Renders an expertise grid with dynamic skill bars. The component uses staggered reveal animations to emphasize different technical categories as they enter the viewport.
+- **`Stats.jsx`**: Fetches live data from Codeforces and GitHub APIs. It includes custom logic for calculating unique problem counts and renders an inline SVG sparkline for competitive rating history.
+- **`Services.jsx`**: A declarative grid of professional offerings that leverages the central reveal system to animate service cards into view with a staggered float-up effect.
+- **`Projects.jsx`**: An advanced gallery with 3D perspective cards that react to mouse position (tilt) and scroll depth (parallax). Includes a "morphed" modal for project details and a fallback toast system for projects without live demos.
+- **`Contact.jsx`**: Integrates an EmailJS-powered form with state-driven button feedback (`idle`, `sending`, `success`, `error`). It also features a 3D "Retro Orb" canvas synced with the active theme's accent color.
 
 ## Feature Highlights
 
@@ -82,6 +97,16 @@ Click project cards to open expanded overview with stack tags and quick links.
 Visitors can send messages directly through the built-in EmailJS contact form.
 
 ![Direct message](public/email.png)
+
+### More Key Features
+
+- **3D Universe Context**: A global interactive starfield rendered with `@react-three/fiber` that reacts dynamically to theme changes.
+- **Cursor Spotlight Effect**: Custom mouse-following glow that illuminates UI components and enhances the futuristic aesthetic.
+- **Scroll-Linked Depth**: Project cards and section elements that use parallax-style depth transformations as the user scrolls.
+- **Dynamic Reveal System**: Staggered scroll animations powered by a custom intersection observer implementation for smooth interface entrance.
+- **Persistent Preferences**: LocalStorage integration to remember selected theme palettes and application states across sessions.
+- **Responsive Navigation**: Sophisticated mobile menu with glassmorphism effects and active-section link tracking.
+- **Graceful Loading States**: Integrated skeleton screens and animated counting effects for real-time statistical data.
 
 ## Useful Commands
 
@@ -119,4 +144,3 @@ npm run lint
 | Focus Areas | MERN Stack, Data Science, Machine Learning             |
 
 <b>Email </b> : m.mmoon1527@gmail.com
-
