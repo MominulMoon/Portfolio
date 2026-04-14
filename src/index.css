@@ -813,7 +813,7 @@ header.scrolled {
   inset: 0;
   background: radial-gradient(
     300px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(0, 212, 255, 0.18),
+    rgba(var(--glow-primary-rgb), 0.18),
     transparent 55%
   );
   opacity: 0;

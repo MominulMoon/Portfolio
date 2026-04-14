@@ -14,7 +14,7 @@ const highlights = [
     title: "Education",
     content: "Academic background and current progress",
     details: [
-      "2nd Year RUET CSE — CG: 3.84 (current)",
+      "2nd Year RUET CSE — CGPA: 3.84 (current)",
       "HSC — Government Azizul Haque College — GPA: 5.00",
       "SSC — Gabtoli Pilot High School — GPA: 5.00",
     ],
